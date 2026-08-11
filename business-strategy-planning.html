@@ -63,6 +63,24 @@ h1 .en{font-family:'Montserrat',sans-serif;font-weight:600;font-size:.7rem;lette
 .ibtn.del{border:none;margin-left:6px}
 .ibtn.del:hover{color:var(--red)}
 
+/* ---------- シート比較ビュー ---------- */
+.cmp-wrap{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px;align-items:start;margin-top:30px}
+.cmp-card{border:1px solid var(--line);background:#fff;display:flex;flex-direction:column}
+.cmp-head{display:flex;justify-content:space-between;align-items:center;gap:8px;background:var(--panel-soft);border-bottom:1px solid var(--line);padding:8px 12px}
+.cmp-head .t{font-weight:700;font-size:.88rem;letter-spacing:.04em;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.cmp-open{flex:none;border:1px solid var(--line);background:#fff;color:var(--muted);cursor:pointer;font-family:inherit;font-size:.7rem;padding:2px 10px;letter-spacing:.06em}
+.cmp-open:hover{border-color:var(--ink);color:var(--ink)}
+.cmp-body{padding:10px 14px 14px;font-size:.8rem}
+.cmp-tally{display:flex;gap:16px;font-size:.76rem;margin-bottom:8px;color:var(--muted);flex-wrap:wrap}
+.cmp-tally b{font-family:'Montserrat',sans-serif;margin-left:4px;color:var(--ink)}
+.cmp-row{display:flex;justify-content:space-between;gap:10px;border-top:1px dashed var(--line);padding:3px 0}
+.cmp-row .n{flex:1;font-size:.76rem;line-height:1.6;color:var(--ink)}
+.cmp-row .v{flex:none;font-family:'Montserrat',sans-serif;font-weight:600;font-size:.8rem;letter-spacing:.1em}
+.sym-p{color:var(--ink);font-weight:700}
+.sym-m{color:var(--red);font-weight:700}
+.sym-z{color:var(--muted)}
+.sym-n{color:#C8C6C2}
+
 /* ---------- meta ---------- */
 .meta{display:flex;gap:28px;flex-wrap:wrap;margin:26px 0 30px}
 .meta label{display:flex;align-items:baseline;gap:10px;font-size:.8rem;color:var(--muted);letter-spacing:.08em}
@@ -334,6 +352,21 @@ table.sum td.memo-cell{color:var(--muted);font-size:.8rem}
 .tension .add-step{align-self:center;position:relative;z-index:1;border:1px solid var(--line);background:var(--card);cursor:pointer;
   font-family:inherit;font-size:.8rem;color:var(--muted);padding:5px 18px;letter-spacing:.06em}
 .tension .add-step:hover{color:var(--red);border-color:var(--red)}
+.tbc{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:0 0 20px;font-size:.78rem}
+.tbc button{border:none;background:none;cursor:pointer;color:var(--muted);font-family:inherit;font-size:.78rem;padding:0;letter-spacing:.04em}
+.tbc button:hover{color:var(--ink);text-decoration:underline}
+.tbc .sep{color:#C8C6C2}
+.tbc .cur{font-weight:700;color:var(--ink);max-width:280px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.drill{
+  flex:none;margin-left:auto;border:1px solid var(--red);background:#fff;color:var(--red);cursor:pointer;
+  font-family:inherit;font-size:.68rem;letter-spacing:.08em;padding:1px 12px;
+}
+.drill:hover{background:var(--red);color:#fff}
+.drill .count{
+  display:inline-block;background:var(--red);color:#fff;border-radius:999px;
+  font-size:.62rem;padding:0 6px;margin-left:5px;font-family:'Montserrat',sans-serif;
+}
+.drill:hover .count{background:#fff;color:var(--red)}
 
 /* ---------- overview (全体を見渡す) ---------- */
 .ov-wrap{display:flex;flex-direction:column}
@@ -453,7 +486,8 @@ footer{margin-top:60px;text-align:center;color:var(--muted);font-size:.7rem;lett
     <h3>注意</h3>
     <p class="note">・ブラウザの履歴・サイトデータを消去すると、端末内の下書きも消えます。残したい内容は必ずJSONで保存してください。<br>
     ・プライベートブラウズ（シークレットモード）では自動保存が効かないことがあります。<br>
-    ・各タブの「シート」バーの「＋」で、どのツールもシートを複数枚作れます（複数事業・複数人数分など）。<br>
+    ・各タブの「シート」バーの「＋」で、どのツールもシートを複数枚作れます（複数事業・複数人数分など）。シートが2枚以上あるときは「比較」で全シートの概要を並べて見られます。<br>
+    ・緊張構造チャートでは、各行動ステップの「チャートに展開」で、そのステップを「創り出したいもの」にしたサブチャートを無限に掘り下げられます（テレスコーピング）。上部のパンくずで親チャートに戻れます。<br>
     ・次のクライアントに移るときは「新規セッション」ボタンで、保存してから全体をまっさらにできます。</p>
   </div>
 </div>
@@ -534,7 +568,9 @@ function blankState(){
   return {q13s:[blankQ13()], bizs:[blankBiz()], personals:[blankPersonal()], ddms:[blankDdm()], tensions:[blankTension()]};
 }
 let state = blankState();
-let ui={q13:0,biz:0,personal:0,ddm:0,tension:0};   /* モードごとの表示中シート番号 */
+let ui={q13:0,biz:0,personal:0,ddm:0,tension:0,tpath:[]};   /* モードごとの表示中シート番号。tpath=緊張構造の入れ子位置 */
+let compareOn=false;   /* シート比較ビュー */
+let lastMode=null;
 function listOf(m){return state[LIST_KEY[m]];}
 function resolve(m){
   const list=listOf(m);
@@ -583,16 +619,23 @@ function render(){
     bv.textContent='タブ表示に戻る';bv.classList.add('active');
     renderAll();
   }else{
-    tabs.style.display='';sumSec.style.display='';br.style.display='';
-    $meta.style.display='';
+    tabs.style.display='';br.style.display='';
     bv.textContent='全体を見渡す';bv.classList.remove('active');
-    renderMeta($meta,mode);
-    if(mode==='ddm'){renderDdm($grid);}
-    else if(mode==='q13'){renderQ13($grid);}
-    else if(mode==='tension'){renderTension($grid);}
-    else{renderGrid($grid,mode);}
-    /* いずれも resolve() で現在シートを描画 */
-    renderSummary();
+    if(mode!==lastMode){compareOn=false;ui.tpath=[];}
+    lastMode=mode;
+    if(compareOn&&listOf(mode).length>1){
+      $meta.style.display='none';sumSec.style.display='none';
+      renderCompare($grid);
+    }else{
+      compareOn=false;
+      $meta.style.display='';sumSec.style.display='';
+      renderMeta($meta,mode);
+      if(mode==='ddm'){renderDdm($grid);}
+      else if(mode==='q13'){renderQ13($grid);}
+      else if(mode==='tension'){renderTension($grid);}
+      else{renderGrid($grid,mode);}
+      renderSummary();
+    }
   }
   renderInstBar();
   document.getElementById('tab-q13').classList.toggle('on',mode==='q13');
@@ -629,7 +672,7 @@ function renderAll(){
     renderMeta(meta,m,s);
     if(m==='ddm')renderDdm(content,s);
     else if(m==='q13')renderQ13(content,s);
-    else if(m==='tension')renderTension(content,s);
+    else if(m==='tension')renderTension(content,s,true);
     else renderGrid(content,m,s);
   });
 }
@@ -653,7 +696,7 @@ function renderInstBar(){
   list.forEach(function(s,i){
     const b=document.createElement('button');b.className='ibtn'+(i===idx?' on':'');
     b.textContent=sheetLabel(mode,s,i);
-    b.addEventListener('click',()=>{ui[mode]=i;render();});
+    b.addEventListener('click',()=>{ui[mode]=i;ui.tpath=[];render();});
     bar.append(b);
   });
   const add=document.createElement('button');add.className='ibtn add';add.textContent='＋';
@@ -662,18 +705,102 @@ function renderInstBar(){
     const m=mode;
     listOf(m).push(BLANKS[m]());
     ui[m]=listOf(m).length-1;
+    ui.tpath=[];
     render();
   });
   bar.append(add);
   if(list.length>1){
+    const cmp=document.createElement('button');cmp.className='ibtn'+(compareOn?' on':'');
+    cmp.textContent='比較';
+    cmp.title='全シートの概要を並べて見る';
+    cmp.addEventListener('click',()=>{compareOn=!compareOn;render();});
+    bar.append(cmp);
     const del=document.createElement('button');del.className='ibtn del';del.textContent='このシートを削除';
     del.addEventListener('click',()=>{
       if(!confirm('表示中のシートを削除しますか？'))return;
       listOf(mode).splice(ui[mode],1);
       ui[mode]=Math.max(0,ui[mode]-1);
+      ui.tpath=[];
       render();
     });
     bar.append(del);
+  }
+}
+/* ---------- シート比較ビュー ---------- */
+function symBin(v){return v===null?'<span class="sym-n">—</span>':(v===0?'<span class="sym-p">＋</span>':'<span class="sym-m">−</span>');}
+function symTr(v){return v===null?'<span class="sym-n">—</span>':(v===0?'<span class="sym-p">＋</span>':(v===1?'<span class="sym-z">0</span>':'<span class="sym-m">−</span>'));}
+function cmpRow(name,valHtml){
+  const r=document.createElement('div');r.className='cmp-row';
+  r.innerHTML='<span class="n">'+esc(name)+'</span><span class="v">'+valHtml+'</span>';
+  return r;
+}
+function renderCompare(container){
+  container.className='cmp-wrap';
+  container.innerHTML='';
+  listOf(mode).forEach(function(s,i){
+    const card=document.createElement('div');card.className='cmp-card';
+    const head=document.createElement('div');head.className='cmp-head';
+    const t=document.createElement('div');t.className='t';t.textContent=sheetLabel(mode,s,i);
+    const open=document.createElement('button');open.className='cmp-open';open.textContent='開く';
+    open.addEventListener('click',()=>{ui[mode]=i;compareOn=false;render();});
+    head.append(t,open);card.append(head);
+    const body=document.createElement('div');body.className='cmp-body';
+    fillCmpBody(body,mode,s);
+    card.append(body);
+    container.append(card);
+  });
+}
+function fillCmpBody(body,m,s){
+  if(m==='biz'||m==='personal'){
+    const defs=catDefs(m,s);
+    let p=0,mi=0,no=0;
+    s.cells.forEach(c=>{c.bin===null?no++:c.bin===0?p++:mi++;});
+    const tl=document.createElement('div');tl.className='cmp-tally';
+    tl.innerHTML='<span>＋<b>'+p+'</b></span><span>−<b class="sym-m">'+mi+'</b></span><span>未<b class="sym-z">'+no+'</b></span>';
+    body.append(tl);
+    defs.forEach(function(def,ci){
+      const name=def.editable?(def.t||('評価項目 '+(ci+1))):def.t;
+      body.append(cmpRow(name,symBin(s.cells[ci].bin)+'　'+symTr(s.cells[ci].tr)));
+    });
+  }else if(m==='ddm'){
+    const tl=document.createElement('div');tl.className='cmp-tally';
+    const yn=s.meta.yn===null?'—':(s.meta.yn===0?'Y やる':'N やらない');
+    tl.innerHTML='<span>テーマ<b>'+esc(s.meta.theme||'—')+'</b></span><span>判定<b class="sym-m">'+esc(yn)+'</b></span>';
+    body.append(tl);
+    s.patterns.forEach(function(pt,pi){
+      let p=0,z=0,mi2=0;
+      pt.cells.forEach(c=>{c===0?p++:c===1?z++:c===2?mi2++:0;});
+      const d=pt.d===null?'—':(pt.d===0?'◯':'−');
+      body.append(cmpRow('パターン '+(pi+1),
+        '<span class="sym-p">'+p+'</span>/<span class="sym-z">'+z+'</span>/<span class="sym-m">'+mi2+'</span>　D:'+(pt.d===2?'<span class="sym-m">−</span>':pt.d===0?'<span class="sym-p">◯</span>':'<span class="sym-n">—</span>')));
+    });
+    let rp=0,rz=0,rm=0;
+    s.realityCells.forEach(c=>{c===0?rp++:c===1?rz++:c===2?rm++:0;});
+    body.append(cmpRow('現実',
+      '<span class="sym-p">'+rp+'</span>/<span class="sym-z">'+rz+'</span>/<span class="sym-m">'+rm+'</span>　R:'+(s.realityD===2?'<span class="sym-m">−</span>':s.realityD===0?'<span class="sym-p">◯</span>':'<span class="sym-n">—</span>')));
+  }else if(m==='q13'){
+    const tl=document.createElement('div');tl.className='cmp-tally';
+    tl.innerHTML='<span>日付<b>'+esc(s.meta.date||'—')+'</b></span><span>事業<b>'+s.businesses.length+'</b></span>';
+    body.append(tl);
+    s.businesses.forEach(function(b,bi){
+      const done=b.answers.filter(a=>a.trim()).length;
+      body.append(cmpRow(b.name||('事業 '+(bi+1)),
+        (done===Q13.length?'<span class="sym-p">':'<span class="sym-z">')+done+'</span><span class="sym-z">/'+Q13.length+'</span>'));
+    });
+  }else if(m==='tension'){
+    const v=s.vision.items.find(t=>t.trim())||'—';
+    const r=s.reality.items.find(t=>t.trim())||'—';
+    const acts=s.actions.filter(a=>a.text.trim());
+    const noDue=acts.filter(a=>!a.due).length;
+    const tl=document.createElement('div');tl.className='cmp-tally';
+    tl.innerHTML='<span>達成期日<b>'+esc(s.vision.date||'—')+'</b></span>';
+    body.append(tl);
+    const trunc=t=>t.length>42?t.slice(0,42)+'…':t;
+    body.append(cmpRow('創り出したいもの',''));
+    const pv=document.createElement('div');pv.style.cssText='font-size:.78rem;margin:2px 0 6px;';pv.textContent=trunc(v);body.append(pv);
+    body.append(cmpRow('今の現実',''));
+    const pr=document.createElement('div');pr.style.cssText='font-size:.78rem;margin:2px 0 6px;color:var(--sage)';pr.textContent=trunc(r);body.append(pr);
+    body.append(cmpRow('行動ステップ','<span class="sym-p">'+acts.length+'</span><span class="sym-z">件</span>'+(noDue?'　<span class="sym-m">期日未設定'+noDue+'</span>':'')));
   }
 }
 function renderMeta(container,m,s){
@@ -1008,21 +1135,83 @@ function renderDdm(container,s){
   autoGrow(ta);
 }
 
-/* ---------- 緊張構造チャート render ---------- */
-function renderTension(container,s){
-  s=s||resolve('tension');
+/* ---------- 緊張構造チャート render（テレスコーピング対応） ---------- */
+const blankSub=(text,due)=>({
+  vision:{items:[text||''],date:due||''},
+  reality:{items:[''],date:''},
+  actions:[{text:'',due:''},{text:'',due:''},{text:'',due:''}]
+});
+function chartAt(root,path){
+  let c=root;
+  for(let k=0;k<path.length;k++){
+    const a=c.actions[path[k]];
+    if(!a||!a.sub)return null;
+    c=a.sub;
+  }
+  return c;
+}
+function parentActionOf(root,path){
+  if(!path.length)return null;
+  const pc=chartAt(root,path.slice(0,-1));
+  return pc?pc.actions[path[path.length-1]]:null;
+}
+function subCount(ch){
+  if(!ch)return 0;
+  let n=0;
+  ch.actions.forEach(a=>{if(a.text&&a.text.trim())n++;n+=subCount(a.sub);});
+  return n;
+}
+function tensionCur(){
+  const root=resolve('tension');
+  if(!Array.isArray(ui.tpath))ui.tpath=[];
+  let c=chartAt(root,ui.tpath);
+  if(!c){ui.tpath=[];c=root;}
+  return c;
+}
+
+function renderTension(container,s,plain){
+  /* plain=true（全体を見渡す等）はルートのみ・ナビなしで描画 */
+  const root=s||resolve('tension');
+  const cur=plain?root:tensionCur();
+  const pa=plain?null:parentActionOf(root,ui.tpath);   /* サブ表示時の親ステップ */
   container.className='tension';
   container.innerHTML='';
 
-  const itemsList=(host,arr,ph)=>{
+  /* パンくず（サブチャートにいるときだけ） */
+  if(!plain&&ui.tpath.length>0){
+    const bc=document.createElement('div');bc.className='tbc';
+    const rootBtn=document.createElement('button');
+    rootBtn.textContent=root.meta.title||'マスターチャート';
+    rootBtn.addEventListener('click',()=>{ui.tpath=[];render();});
+    bc.append(rootBtn);
+    let walk=root;
+    ui.tpath.forEach(function(idx,d){
+      const sep=document.createElement('span');sep.className='sep';sep.textContent='▸';bc.append(sep);
+      const act=walk.actions[idx];
+      const label=(act&&act.text.trim())?act.text:('行動ステップ '+(idx+1));
+      const short=label.length>24?label.slice(0,24)+'…':label;
+      if(d===ui.tpath.length-1){
+        const curEl=document.createElement('span');curEl.className='cur';curEl.textContent=short;bc.append(curEl);
+      }else{
+        const b=document.createElement('button');b.textContent=short;
+        const upto=ui.tpath.slice(0,d+1);
+        b.addEventListener('click',()=>{ui.tpath=upto;render();});
+        bc.append(b);
+      }
+      walk=act.sub;
+    });
+    container.append(bc);
+  }
+
+  const itemsList=(host,arr,ph,extra)=>{
     const ul=document.createElement('ul');ul.className='items';
     arr.forEach((txt,i)=>{
       const li=document.createElement('li');
       const ta=document.createElement('textarea');ta.rows=1;ta.value=txt;ta.placeholder=ph;
-      ta.addEventListener('input',()=>{arr[i]=ta.value;autoGrow(ta);syncSummary();});
+      ta.addEventListener('input',()=>{arr[i]=ta.value;if(extra)extra(i,ta.value);autoGrow(ta);syncSummary();});
       const x=document.createElement('button');x.className='x';x.textContent='×';x.title='削除';
       x.addEventListener('click',()=>{
-        if(arr.length<=1){arr[0]='';render();return;}
+        if(arr.length<=1){arr[0]='';if(extra)extra(0,'');render();return;}
         arr.splice(i,1);render();
       });
       li.append(ta,x);ul.append(li);
@@ -1034,47 +1223,75 @@ function renderTension(container,s){
     ul.querySelectorAll('textarea').forEach(autoGrow);
   };
 
-  /* 創り出したいもの */
+  /* 創り出したいもの（サブチャートでは親の行動ステップと双方向同期） */
   const vp=document.createElement('div');vp.className='pole vision';
   const vh=document.createElement('div');vh.className='pole-head';
   const vl=document.createElement('div');vl.className='pole-label';vl.textContent='創り出したいもの';
   const vd=document.createElement('label');vd.className='date-field';vd.append('達成期日');
-  const vdi=document.createElement('input');vdi.type='date';vdi.value=s.vision.date;
-  vdi.addEventListener('input',()=>{s.vision.date=vdi.value;syncSummary();});
+  const vdi=document.createElement('input');vdi.type='date';vdi.value=cur.vision.date;
+  vdi.addEventListener('input',()=>{
+    cur.vision.date=vdi.value;
+    if(pa)pa.due=vdi.value;   /* 親ステップの期日と同期 */
+    syncSummary();
+  });
   vd.append(vdi);vh.append(vl,vd);vp.append(vh);
-  itemsList(vp,s.vision.items,'創り出したい成果を書く');
+  itemsList(vp,cur.vision.items,'創り出したい成果を書く',
+    pa?function(i,val){if(i===0)pa.text=val;}:null);   /* 1行目は親ステップの文と同期 */
   container.append(vp);
 
   /* 行動ステップ＋矢印 */
   const steps=document.createElement('div');steps.className='steps';
   const sl=document.createElement('div');sl.className='steps-label';sl.textContent='行動ステップ';
   steps.append(sl);
-  s.actions.forEach((a,i)=>{
+  cur.actions.forEach(function(a,i){
     const st=document.createElement('div');st.className='step';
     const row=document.createElement('div');row.className='srow';
     const ta=document.createElement('textarea');ta.rows=1;ta.value=a.text;ta.placeholder='行動ステップ '+(i+1);
-    ta.addEventListener('input',()=>{a.text=ta.value;autoGrow(ta);syncSummary();});
+    ta.addEventListener('input',()=>{
+      a.text=ta.value;
+      if(a.sub)a.sub.vision.items[0]=ta.value;   /* サブチャートのビジョンへ同期 */
+      autoGrow(ta);syncSummary();
+    });
     const ctl=document.createElement('span');ctl.className='sctl';
     const up=document.createElement('button');up.textContent='▲';up.title='上へ';up.disabled=(i===0);
-    up.addEventListener('click',()=>{const t=s.actions.splice(i,1)[0];s.actions.splice(i-1,0,t);render();});
-    const dn=document.createElement('button');dn.textContent='▼';dn.title='下へ';dn.disabled=(i===s.actions.length-1);
-    dn.addEventListener('click',()=>{const t=s.actions.splice(i,1)[0];s.actions.splice(i+1,0,t);render();});
+    up.addEventListener('click',()=>{const t=cur.actions.splice(i,1)[0];cur.actions.splice(i-1,0,t);render();});
+    const dn=document.createElement('button');dn.textContent='▼';dn.title='下へ';dn.disabled=(i===cur.actions.length-1);
+    dn.addEventListener('click',()=>{const t=cur.actions.splice(i,1)[0];cur.actions.splice(i+1,0,t);render();});
     const del=document.createElement('button');del.className='del';del.textContent='×';del.title='削除';
     del.addEventListener('click',()=>{
-      if(s.actions.length<=1){s.actions[0]={text:'',due:''};render();return;}
-      s.actions.splice(i,1);render();
+      if(a.sub&&subCount(a.sub)>0&&!confirm('このステップにはサブチャートがあります。一緒に削除しますか？'))return;
+      if(cur.actions.length<=1){cur.actions[0]={text:'',due:''};render();return;}
+      cur.actions.splice(i,1);render();
     });
     ctl.append(up,dn,del);
     row.append(ta,ctl);st.append(row);
     const sm=document.createElement('div');sm.className='smeta';sm.append('期日');
     const di=document.createElement('input');di.type='date';di.value=a.due;
-    di.addEventListener('input',()=>{a.due=di.value;syncSummary();});
-    sm.append(di);st.append(sm);
+    di.addEventListener('input',()=>{
+      a.due=di.value;
+      if(a.sub)a.sub.vision.date=di.value;
+      syncSummary();
+    });
+    sm.append(di);
+    if(!plain){
+      /* テレスコーピング：このステップを次のチャートの「創り出したいもの」に */
+      const cnt=subCount(a.sub);
+      const drill=document.createElement('button');drill.className='drill';
+      drill.innerHTML='チャートに展開'+(cnt?'<span class="count">'+cnt+'</span>':' ▸');
+      drill.title='この行動ステップを「創り出したいもの」にしたサブチャートを開く';
+      drill.addEventListener('click',()=>{
+        if(!a.sub)a.sub=blankSub(a.text,a.due);
+        ui.tpath=ui.tpath.concat([i]);
+        render();
+      });
+      sm.append(drill);
+    }
+    st.append(sm);
     steps.append(st);
     autoGrow(ta);
   });
   const addS=document.createElement('button');addS.className='add-step';addS.textContent='＋ 行動ステップを追加';
-  addS.addEventListener('click',()=>{s.actions.push({text:'',due:''});render();});
+  addS.addEventListener('click',()=>{cur.actions.push({text:'',due:''});render();});
   steps.append(addS);
   container.append(steps);
 
@@ -1083,10 +1300,10 @@ function renderTension(container,s){
   const rh=document.createElement('div');rh.className='pole-head';
   const rl=document.createElement('div');rl.className='pole-label';rl.textContent='創り出したいものからみた今の現実';
   const rd=document.createElement('label');rd.className='date-field';rd.append('時点');
-  const rdi=document.createElement('input');rdi.type='date';rdi.value=s.reality.date;
-  rdi.addEventListener('input',()=>{s.reality.date=rdi.value;syncSummary();});
+  const rdi=document.createElement('input');rdi.type='date';rdi.value=cur.reality.date;
+  rdi.addEventListener('input',()=>{cur.reality.date=rdi.value;syncSummary();});
   rd.append(rdi);rh.append(rl,rd);rp.append(rh);
-  itemsList(rp,s.reality.items,'今の現実をあるがままに書く');
+  itemsList(rp,cur.reality.items,'今の現実をあるがままに書く');
   container.append(rp);
 }
 
@@ -1217,7 +1434,7 @@ function renderQ13Summary(){
   });
 }
 function renderTensionSummary(){
-  const s=resolve('tension');
+  const s=tensionCur();
   document.getElementById('sumhint').textContent='創り出したいものと今の現実の間の緊張構造が、行動ステップを生みます。ステップと期日の一覧です。';
   document.getElementById('sumhead').innerHTML='<tr><th style="width:6%">#</th><th>行動ステップ</th><th style="width:18%">期日</th></tr>';
   const v=s.vision.items.filter(t=>t.trim()).length;
@@ -1286,7 +1503,7 @@ document.getElementById('btn-save').addEventListener('click',doSave);
 /* 新規セッション：全ツールをまっさらに */
 function startNewSession(){
   state=blankState();
-  ui={q13:0,biz:0,personal:0,ddm:0,tension:0};
+  ui={q13:0,biz:0,personal:0,ddm:0,tension:0,tpath:[]};
   mode='q13';view='tabs';
   try{localStorage.removeItem(LS_KEY);}catch(_){}
   document.getElementById('ns-overlay').classList.remove('open');
@@ -1320,6 +1537,7 @@ document.getElementById('help-overlay').addEventListener('click',e=>{if(e.target
 document.getElementById('btn-reset').addEventListener('click',()=>{
   if(!confirm('現在のモードの内容をリセットしますか？'))return;
   listOf(mode)[ui[mode]]=BLANKS[mode]();
+  ui.tpath=[];
   render();
 });
 
@@ -1348,13 +1566,13 @@ function applyCompat(){  /* 旧バージョンのデータとの互換 */
     }
     return d;
   });
-  ui={q13:0,biz:0,personal:0,ddm:0,tension:0};
+  ui={q13:0,biz:0,personal:0,ddm:0,tension:0,tpath:[]};
 }
 
 /* ---------- 端末内自動保存（localStorage） ----------
    データはこの端末のブラウザ内にだけ保存され、外部には送信されません。 */
 /* ==== バージョン（更新時はここを書き換える） ==== */
-const APP_VERSION='1.1（2026年8月）';
+const APP_VERSION='1.3（2026年8月）';
 document.getElementById('ver-footer').textContent=' ・ v'+APP_VERSION.split('（')[0];
 document.getElementById('ver-help').textContent=APP_VERSION;
 
