@@ -385,6 +385,7 @@ footer{margin-top:60px;text-align:center;color:var(--muted);font-size:.7rem;lett
     <button class="btn" id="btn-load">読み込み</button>
     <button class="btn" id="btn-print">印刷 / PDF</button>
     <button class="btn" id="btn-reset">リセット</button>
+    <button class="btn" id="btn-new">新規セッション</button>
     <button class="btn" id="btn-help">使い方</button>
   </div>
 </header>
@@ -416,6 +417,19 @@ footer{margin-top:60px;text-align:center;color:var(--muted);font-size:.7rem;lett
 <footer>ROBERT FRITZ CONSULTING<span id="ver-footer"></span></footer>
 </div>
 
+<div class="help-overlay" id="ns-overlay">
+  <div class="help-box" style="max-width:480px">
+    <button class="help-close" id="ns-cancel" title="閉じる">×</button>
+    <h2>新規セッションを始める</h2>
+    <p style="font-size:.88rem">すべてのタブ・すべてのシートの内容を消去して、まっさらな状態から始めます。この端末に自動保存されている下書きも消去されます。</p>
+    <p style="font-size:.8rem;color:var(--muted);margin-top:10px">いまの内容を記録として残す場合は、先に保存してください。</p>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:24px">
+      <button class="btn" id="ns-save-clear" style="background:var(--ink);color:#fff;border-color:var(--ink)">保存（JSON）してから消去</button>
+      <button class="btn" id="ns-clear" style="color:var(--red);border-color:var(--red)">保存せずに消去</button>
+    </div>
+  </div>
+</div>
+
 <div class="help-overlay" id="help-overlay">
   <div class="help-box">
     <button class="help-close" id="help-close" title="閉じる">×</button>
@@ -439,7 +453,8 @@ footer{margin-top:60px;text-align:center;color:var(--muted);font-size:.7rem;lett
     <h3>注意</h3>
     <p class="note">・ブラウザの履歴・サイトデータを消去すると、端末内の下書きも消えます。残したい内容は必ずJSONで保存してください。<br>
     ・プライベートブラウズ（シークレットモード）では自動保存が効かないことがあります。<br>
-    ・パフォーマンス評価と意思決定は、タブ内の「シート」バーの「＋」で複数枚作れます。</p>
+    ・各タブの「シート」バーの「＋」で、どのツールもシートを複数枚作れます（複数事業・複数人数分など）。<br>
+    ・次のクライアントに移るときは「新規セッション」ボタンで、保存してから全体をまっさらにできます。</p>
   </div>
 </div>
 
@@ -512,20 +527,32 @@ const blankTension = () => ({
   actions:[{text:'',due:''},{text:'',due:''},{text:'',due:''}]
 });
 const blankPersonal = () => ({meta:{name:'',role:'',date:today()}, titles:Array(N_PERSONAL).fill(''), cells:Array.from({length:N_PERSONAL},blank)});
-let state = {
-  q13:      blankQ13(),
-  biz:      {meta:{name:'',date:today()}, cells:BIZ_CATS.map(blank)},
-  personals:[blankPersonal()],
-  ddms:     [blankDdm()],
-  tension:  blankTension(),
-};
-let ui={pi:0,di:0};   /* 表示中のシート番号 */
+const blankBiz = () => ({meta:{name:'',date:today()}, cells:BIZ_CATS.map(blank)});
+const LIST_KEY={q13:'q13s',biz:'bizs',personal:'personals',ddm:'ddms',tension:'tensions'};
+const BLANKS={q13:blankQ13,biz:blankBiz,personal:blankPersonal,ddm:blankDdm,tension:blankTension};
+function blankState(){
+  return {q13s:[blankQ13()], bizs:[blankBiz()], personals:[blankPersonal()], ddms:[blankDdm()], tensions:[blankTension()]};
+}
+let state = blankState();
+let ui={q13:0,biz:0,personal:0,ddm:0,tension:0};   /* モードごとの表示中シート番号 */
+function listOf(m){return state[LIST_KEY[m]];}
 function resolve(m){
-  if(m==='personal'){if(ui.pi>=state.personals.length)ui.pi=0;return state.personals[ui.pi];}
-  if(m==='ddm'){if(ui.di>=state.ddms.length)ui.di=0;return state.ddms[ui.di];}
-  return state[m];
+  const list=listOf(m);
+  if(ui[m]>=list.length)ui[m]=0;
+  return list[ui[m]];
 }
 /* シートが実際に使われているか（全体を見渡すでの表示判定） */
+function usedQ13(s){
+  return !!(s.businesses.length>1||s.businesses.some(b=>b.name.trim()||b.answers.some(a=>a.trim())));
+}
+function usedBiz(s){
+  return !!(s.meta.name.trim()||s.cells.some(c=>c.bin!==null||c.tr!==null||c.memo.trim()));
+}
+function usedTension(s){
+  return !!(s.meta.title.trim()||s.vision.items.some(t=>t.trim())||s.vision.date||
+    s.reality.items.some(t=>t.trim())||s.reality.date||
+    s.actions.some(a=>a.text.trim()||a.due));
+}
 function usedPersonal(s){
   return !!(s.meta.name.trim()||s.meta.role.trim()||s.titles.some(t=>t.trim())||
     s.cells.some(c=>c.bin!==null||c.tr!==null||c.memo.trim()));
@@ -564,6 +591,7 @@ function render(){
     else if(mode==='q13'){renderQ13($grid);}
     else if(mode==='tension'){renderTension($grid);}
     else{renderGrid($grid,mode);}
+    /* いずれも resolve() で現在シートを描画 */
     renderSummary();
   }
   renderInstBar();
@@ -576,18 +604,19 @@ function render(){
 function renderAll(){
   $grid.className='ov-wrap';
   $grid.innerHTML='';
-  /* コア3点は常に表示。パフォーマンス評価・意思決定は使ったシートだけ */
-  const secs=[
-    ['11の質問','q13',state.q13],
-    ['事業分析','biz',state.biz],
-    ['緊張構造チャート','tension',state.tension],
-  ];
-  state.personals.forEach(function(s,i){
-    if(usedPersonal(s))secs.push(['パフォーマンス評価'+(state.personals.length>1?' '+(i+1):''),'personal',s]);
-  });
-  state.ddms.forEach(function(s,i){
-    if(usedDdm(s))secs.push(['意思決定'+(state.ddms.length>1?' '+(i+1):''),'ddm',s]);
-  });
+  /* コア3点は常に表示（複数シートは使った分を全て）。オプション2種は使ったシートだけ */
+  const secs=[];
+  const pushSheets=(title,m,usedFn,alwaysFirst)=>{
+    const list=listOf(m);
+    const shown=list.filter(usedFn);
+    const arr=(shown.length===0&&alwaysFirst)?[list[0]]:shown;
+    arr.forEach((s,i)=>secs.push([title+(arr.length>1?' '+(i+1):''),m,s]));
+  };
+  pushSheets('11の質問','q13',usedQ13,true);
+  pushSheets('事業分析','biz',usedBiz,true);
+  pushSheets('緊張構造チャート','tension',usedTension,true);
+  pushSheets('パフォーマンス評価','personal',usedPersonal,false);
+  pushSheets('意思決定','ddm',usedDdm,false);
   secs.forEach(function(item,idx){
     const title=item[0],m=item[1],s=item[2];
     const sec=document.createElement('section');sec.className='ov-sec';
@@ -599,32 +628,40 @@ function renderAll(){
     $grid.append(sec);
     renderMeta(meta,m,s);
     if(m==='ddm')renderDdm(content,s);
-    else if(m==='q13')renderQ13(content);
-    else if(m==='tension')renderTension(content);
+    else if(m==='q13')renderQ13(content,s);
+    else if(m==='tension')renderTension(content,s);
     else renderGrid(content,m,s);
   });
 }
 /* ---------- 複数シートの切替バー ---------- */
+function sheetLabel(m,s,i){
+  if(m==='personal')return s.meta.name||('評価 '+(i+1));
+  if(m==='ddm')return s.meta.theme||('決定 '+(i+1));
+  if(m==='biz')return s.meta.name||('事業分析 '+(i+1));
+  if(m==='tension')return s.meta.title||('チャート '+(i+1));
+  if(m==='q13')return (s.businesses[0]&&s.businesses[0].name)||('シート '+(i+1));
+  return 'シート '+(i+1);
+}
 function renderInstBar(){
   const bar=document.getElementById('instbar');
   bar.innerHTML='';
-  if(view!=='tabs'||(mode!=='personal'&&mode!=='ddm')){bar.style.display='none';return;}
+  if(view!=='tabs'){bar.style.display='none';return;}
   bar.style.display='';
-  const isP=(mode==='personal');
-  const list=isP?state.personals:state.ddms;
-  const idx=isP?ui.pi:ui.di;
+  const list=listOf(mode);
+  const idx=ui[mode];
   const lb=document.createElement('span');lb.className='ilabel';lb.textContent='シート';bar.append(lb);
   list.forEach(function(s,i){
     const b=document.createElement('button');b.className='ibtn'+(i===idx?' on':'');
-    b.textContent=isP?(s.meta.name||('評価 '+(i+1))):(s.meta.theme||('決定 '+(i+1)));
-    b.addEventListener('click',()=>{if(isP)ui.pi=i;else ui.di=i;render();});
+    b.textContent=sheetLabel(mode,s,i);
+    b.addEventListener('click',()=>{ui[mode]=i;render();});
     bar.append(b);
   });
   const add=document.createElement('button');add.className='ibtn add';add.textContent='＋';
-  add.title=isP?'新しい評価シートを追加':'新しい意思決定シートを追加';
+  add.title='新しいシートを追加';
   add.addEventListener('click',()=>{
-    if(isP){state.personals.push(blankPersonal());ui.pi=state.personals.length-1;}
-    else{state.ddms.push(blankDdm());ui.di=state.ddms.length-1;}
+    const m=mode;
+    listOf(m).push(BLANKS[m]());
+    ui[m]=listOf(m).length-1;
     render();
   });
   bar.append(add);
@@ -632,8 +669,8 @@ function renderInstBar(){
     const del=document.createElement('button');del.className='ibtn del';del.textContent='このシートを削除';
     del.addEventListener('click',()=>{
       if(!confirm('表示中のシートを削除しますか？'))return;
-      if(isP){state.personals.splice(ui.pi,1);ui.pi=Math.max(0,ui.pi-1);}
-      else{state.ddms.splice(ui.di,1);ui.di=Math.max(0,ui.di-1);}
+      listOf(mode).splice(ui[mode],1);
+      ui[mode]=Math.max(0,ui[mode]-1);
       render();
     });
     bar.append(del);
@@ -705,8 +742,8 @@ function catDefs(m,s){
 }
 
 /* ---------- 13の質問 render ---------- */
-function renderQ13(container){
-  const s=state.q13;
+function renderQ13(container,s){
+  s=s||resolve('q13');
   container.className='q13-wrap';
   container.innerHTML='';
 
@@ -972,8 +1009,8 @@ function renderDdm(container,s){
 }
 
 /* ---------- 緊張構造チャート render ---------- */
-function renderTension(container){
-  const s=state.tension;
+function renderTension(container,s){
+  s=s||resolve('tension');
   container.className='tension';
   container.innerHTML='';
 
@@ -1162,7 +1199,7 @@ function renderSummary(){
   });
 }
 function renderQ13Summary(){
-  const s=state.q13;
+  const s=resolve('q13');
   document.getElementById('sumhint').textContent='事業ごとの記入状況です。答えられない質問こそが、次に取り組むテーマになります。';
   document.getElementById('sumhead').innerHTML='<tr><th style="width:34%">事業</th><th style="width:18%">記入済み</th><th>未記入の質問</th></tr>';
   $tally.innerHTML='<span>事業<b>'+s.businesses.length+'</b></span>';
@@ -1180,7 +1217,7 @@ function renderQ13Summary(){
   });
 }
 function renderTensionSummary(){
-  const s=state.tension;
+  const s=resolve('tension');
   document.getElementById('sumhint').textContent='創り出したいものと今の現実の間の緊張構造が、行動ステップを生みます。ステップと期日の一覧です。';
   document.getElementById('sumhead').innerHTML='<tr><th style="width:6%">#</th><th>行動ステップ</th><th style="width:18%">期日</th></tr>';
   const v=s.vision.items.filter(t=>t.trim()).length;
@@ -1236,7 +1273,7 @@ document.getElementById('tab-ddm').addEventListener('click',()=>{mode='ddm';rend
 document.getElementById('tab-tension').addEventListener('click',()=>{mode='tension';render();});
 
 /* ---------- file actions ---------- */
-document.getElementById('btn-save').addEventListener('click',()=>{
+function doSave(){
   const blob=new Blob([JSON.stringify({app:'rfc-structural-assessment',version:1,mode,state},null,2)],{type:'application/json'});
   const a=document.createElement('a');
   a.href=URL.createObjectURL(blob);
@@ -1244,7 +1281,25 @@ document.getElementById('btn-save').addEventListener('click',()=>{
   const nm=(mm.name||mm.theme||mm.title||'事業戦略プランニング')+'_'+(mm.date||today());
   a.download=nm+'.json';
   a.click();URL.revokeObjectURL(a.href);
+}
+document.getElementById('btn-save').addEventListener('click',doSave);
+/* 新規セッション：全ツールをまっさらに */
+function startNewSession(){
+  state=blankState();
+  ui={q13:0,biz:0,personal:0,ddm:0,tension:0};
+  mode='q13';view='tabs';
+  try{localStorage.removeItem(LS_KEY);}catch(_){}
+  document.getElementById('ns-overlay').classList.remove('open');
+  render();
+}
+document.getElementById('btn-new').addEventListener('click',()=>document.getElementById('ns-overlay').classList.add('open'));
+document.getElementById('ns-cancel').addEventListener('click',()=>document.getElementById('ns-overlay').classList.remove('open'));
+document.getElementById('ns-save-clear').addEventListener('click',()=>{doSave();startNewSession();});
+document.getElementById('ns-clear').addEventListener('click',()=>{
+  if(!confirm('保存せずにすべての内容を消去します。よろしいですか？'))return;
+  startNewSession();
 });
+document.getElementById('ns-overlay').addEventListener('click',e=>{if(e.target.id==='ns-overlay')e.target.classList.remove('open');});
 document.getElementById('btn-load').addEventListener('click',()=>document.getElementById('file-in').click());
 document.getElementById('file-in').addEventListener('change',e=>{
   const f=e.target.files[0];if(!f)return;
@@ -1264,20 +1319,20 @@ document.getElementById('help-close').addEventListener('click',()=>document.getE
 document.getElementById('help-overlay').addEventListener('click',e=>{if(e.target.id==='help-overlay')e.target.classList.remove('open');});
 document.getElementById('btn-reset').addEventListener('click',()=>{
   if(!confirm('現在のモードの内容をリセットしますか？'))return;
-  if(mode==='biz') state.biz={meta:{name:'',date:today()},cells:BIZ_CATS.map(blank)};
-  else if(mode==='ddm') state.ddms[ui.di]=blankDdm();
-  else if(mode==='q13') state.q13=blankQ13();
-  else if(mode==='tension') state.tension=blankTension();
-  else state.personals[ui.pi]=blankPersonal();
+  listOf(mode)[ui[mode]]=BLANKS[mode]();
   render();
 });
 
 function applyCompat(){  /* 旧バージョンのデータとの互換 */
-  if(!state.q13)state.q13=blankQ13();
-  if(!state.tension)state.tension=blankTension();
   if(state.personal&&!state.personals){state.personals=[state.personal];delete state.personal;}
-  if(!Array.isArray(state.personals)||!state.personals.length)state.personals=[blankPersonal()];
   if(state.ddm&&!state.ddms){state.ddms=[state.ddm];delete state.ddm;}
+  if(state.q13&&!state.q13s){state.q13s=[state.q13];delete state.q13;}
+  if(state.biz&&!state.bizs){state.bizs=[state.biz];delete state.biz;}
+  if(state.tension&&!state.tensions){state.tensions=[state.tension];delete state.tension;}
+  if(!Array.isArray(state.q13s)||!state.q13s.length)state.q13s=[blankQ13()];
+  if(!Array.isArray(state.bizs)||!state.bizs.length)state.bizs=[blankBiz()];
+  if(!Array.isArray(state.tensions)||!state.tensions.length)state.tensions=[blankTension()];
+  if(!Array.isArray(state.personals)||!state.personals.length)state.personals=[blankPersonal()];
   if(!Array.isArray(state.ddms)||!state.ddms.length)state.ddms=[blankDdm()];
   state.ddms=state.ddms.map(function(d){
     if(d.options||!d.elements){  /* 旧・意思決定データを新形式へ変換 */
@@ -1293,13 +1348,13 @@ function applyCompat(){  /* 旧バージョンのデータとの互換 */
     }
     return d;
   });
-  ui.pi=0;ui.di=0;
+  ui={q13:0,biz:0,personal:0,ddm:0,tension:0};
 }
 
 /* ---------- 端末内自動保存（localStorage） ----------
    データはこの端末のブラウザ内にだけ保存され、外部には送信されません。 */
 /* ==== バージョン（更新時はここを書き換える） ==== */
-const APP_VERSION='1.0（2026年8月）';
+const APP_VERSION='1.1（2026年8月）';
 document.getElementById('ver-footer').textContent=' ・ v'+APP_VERSION.split('（')[0];
 document.getElementById('ver-help').textContent=APP_VERSION;
 
