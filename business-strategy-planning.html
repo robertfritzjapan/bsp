@@ -102,25 +102,9 @@ h1 .en{font-family:'Montserrat',sans-serif;font-weight:600;font-size:.7rem;lette
 
 .cat{background:var(--card);border:1px solid var(--line);display:flex;flex-direction:column}
 .cat-head{
-  position:relative;
   background:var(--panel-soft);border-bottom:1px solid var(--line);
   padding:10px 14px 8px;min-height:52px;display:flex;align-items:center;justify-content:center;
 }
-/* 評価項目が編集できるカード（パフォーマンス評価）：右端の × の分だけ左右に余白 */
-.cat-head.editable{padding-left:26px;padding-right:26px}
-.cat-head .x{
-  position:absolute;right:5px;top:50%;transform:translateY(-50%);
-  border:none;background:none;cursor:pointer;color:var(--muted);
-  font-size:.9rem;line-height:1;padding:2px 5px;visibility:hidden;
-}
-.cat:hover .cat-head .x,.cat-head:focus-within .x{visibility:visible}
-.cat-head .x:hover{color:var(--red)}
-.add-cat{
-  border:1px dashed #CFCEC9;background:none;color:var(--muted);
-  font-family:inherit;font-size:.85rem;letter-spacing:.06em;cursor:pointer;
-  min-height:110px;padding:14px;display:flex;align-items:center;justify-content:center;
-}
-.add-cat:hover{color:var(--red);border-color:var(--red)}
 .cat-head .t{
   font-weight:700;font-size:.92rem;letter-spacing:.06em;text-align:center;line-height:1.5;
 }
@@ -185,38 +169,13 @@ table.q13 td.acell textarea:focus{outline:none}
 .ddm-wrap{display:flex;flex-direction:column;gap:26px}
 .ddm-note{font-size:.75rem;color:var(--muted);letter-spacing:.08em}
 .ddm-note .en{font-family:'Montserrat',sans-serif;letter-spacing:.14em;text-transform:uppercase;margin-left:8px;font-size:.65rem}
-.crit-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
-@media(max-width:760px){.crit-grid{grid-template-columns:1fr}}
-.crit{display:flex;align-items:center;gap:8px;border:1px solid var(--line);background:var(--panel-soft);padding:8px 10px;cursor:grab}
-.crit.dragging{opacity:.4}
-.crit.dragover{border-color:var(--red)}
-.crit .grip{color:#B9B7B3;font-size:.8rem;flex:none;user-select:none}
-.crit .num{font-family:'Montserrat',sans-serif;font-weight:700;font-size:.85rem;color:var(--sage);flex:none;width:1.2em;text-align:center}
-.crit .mvs{display:flex;flex-direction:column;flex:none;visibility:hidden}
-.crit:hover .mvs{visibility:visible}
-.crit .mvs button{border:none;background:none;cursor:pointer;color:var(--muted);font-size:.55rem;line-height:1.1;padding:0 2px}
-.crit .mvs button:hover{color:var(--ink)}
-.crit .mvs button:disabled{opacity:.25;cursor:default}
-.crit input{flex:1;font-family:inherit;font-size:.85rem;border:none;background:none;color:var(--ink)}
-.crit input::placeholder{color:#B9B7B3}
-.crit input:focus{outline:none}
 table.ddm{width:100%;border-collapse:collapse;font-size:.85rem;table-layout:fixed}
 table.ddm th{
   border:1px solid var(--line);background:var(--panel-soft);
   font-family:'Montserrat',sans-serif;font-weight:600;font-size:.8rem;letter-spacing:.06em;
   padding:6px 4px;text-align:center;
 }
-table.ddm th.opt-name{width:22%;font-family:'Noto Sans JP',sans-serif;font-size:.72rem;letter-spacing:.12em;color:var(--muted);font-weight:500}
-table.ddm th.dcol{background:var(--ink);color:#fff;width:8%}
 table.ddm td{border:1px solid var(--line);padding:0;text-align:center;height:44px}
-table.ddm td.name{padding:4px 8px;text-align:left}
-table.ddm td.name .nwrap{display:flex;align-items:center;gap:4px}
-table.ddm td.name input{width:100%;font-family:inherit;font-size:.85rem;border:none;background:none;color:var(--ink)}
-table.ddm td.name input::placeholder{color:#C8C6C2}
-table.ddm td.name input:focus{outline:none}
-table.ddm td.name .x{border:none;background:none;cursor:pointer;color:var(--muted);visibility:hidden;padding:0 2px}
-table.ddm tr:hover td.name .x{visibility:visible}
-table.ddm td.name .x:hover{color:var(--red)}
 button.cell{
   width:100%;height:100%;min-height:44px;border:none;background:none;cursor:pointer;
   font-family:'Montserrat',sans-serif;font-size:.95rem;font-weight:600;color:var(--ink);
@@ -224,18 +183,6 @@ button.cell{
 button.cell:hover{background:var(--panel-soft)}
 button.cell.v1{color:var(--muted);font-weight:500}
 button.cell.v2{color:var(--red)}
-td.dcell{position:relative}
-td.dcell button.cell{color:var(--red);font-weight:700}
-td.dcell svg.ring{position:absolute;inset:4px 8px;width:calc(100% - 16px);height:calc(100% - 8px);pointer-events:none;overflow:visible}
-td.dcell svg.ring ellipse{fill:none;stroke:var(--red);stroke-width:2.4;stroke-linecap:round}
-tr.reality td.rlabel{background:var(--panel);text-align:left;padding:6px 10px;font-weight:700;letter-spacing:.08em;font-size:.8rem}
-tr.reality td.rtext{padding:4px 8px}
-tr.reality td.rtext textarea{
-  width:100%;font-family:inherit;font-size:.85rem;line-height:1.6;border:none;background:none;
-  resize:none;overflow:hidden;color:var(--ink);min-height:1.6em;
-}
-tr.reality td.rtext textarea:focus{outline:none}
-tr.reality th.rcol{background:var(--sage);color:#fff}
 .add-opt{
   align-self:flex-start;border:none;background:none;cursor:pointer;
   font-family:inherit;font-size:.8rem;color:var(--muted);padding:2px 0;
@@ -384,6 +331,63 @@ table.sum td.memo-cell{color:var(--muted);font-size:.8rem}
 }
 .drill:hover .count{background:#fff;color:var(--red)}
 
+/* 完了チェック（角丸なしの四角） */
+.dchk{
+  flex:none;width:17px;height:17px;margin-top:.28em;padding:0;cursor:pointer;
+  border:1px solid var(--muted);background:#fff;color:transparent;
+  font-family:'Montserrat',sans-serif;font-size:.72rem;font-weight:700;line-height:1;
+}
+.dchk:hover{border-color:var(--ink)}
+.dchk.on{background:var(--ink);border-color:var(--ink);color:#fff}
+.dchk:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+/* 担当 */
+.owner-field{display:inline-flex;align-items:baseline;gap:4px}
+.owner-field input{
+  font-family:inherit;font-size:.75rem;color:var(--sage);width:8em;
+  border:none;border-bottom:1px solid var(--line);background:none;padding:1px 0;
+}
+.owner-field input::placeholder{color:#C8C6C2}
+.owner-field input:focus{outline:none;border-bottom-color:var(--sage)}
+.tension .step .smeta .owner-field{color:var(--muted)}
+
+/* ---------- 全体を見渡す：緊張構造チャートのアウトライン ---------- */
+.tol{margin-top:10px}
+.tol-label{font-size:.75rem;letter-spacing:.1em;color:var(--muted);margin-bottom:2px}
+.ol-item{padding-top:2px}
+.ol-kids{margin-left:9px;padding-left:20px;border-left:1px solid var(--line)}
+.ol-row{display:flex;align-items:flex-start;gap:9px;border-top:1px dashed var(--line);padding:6px 0 0}
+.ol-row .no{
+  flex:none;min-width:3.4em;padding-top:.2em;text-align:right;
+  font-family:'Montserrat',sans-serif;font-weight:700;font-size:.74rem;color:var(--sage);letter-spacing:.04em;
+}
+.ol-row textarea{
+  flex:1;font-family:inherit;font-size:.92rem;line-height:1.7;color:var(--ink);
+  border:none;background:none;resize:none;overflow:hidden;padding:0;min-height:1.7em;
+}
+.ol-row textarea::placeholder{color:#C8C6C2}
+.ol-row textarea:focus{outline:none}
+.ol-row.done textarea{text-decoration:line-through;color:var(--muted)}
+.ol-row .sctl{display:flex;flex:none;visibility:hidden}
+.ol-row:hover .sctl,.ol-row:focus-within .sctl{visibility:visible}
+.ol-row .sctl button{border:none;background:none;cursor:pointer;color:var(--muted);font-size:.78rem;line-height:1.7;padding:0 3px}
+.ol-row .sctl button:hover{color:var(--ink)}
+.ol-row .sctl button.del:hover{color:var(--red)}
+.ol-row .sctl button:disabled{opacity:.25;cursor:default}
+.ol-meta{display:flex;flex-wrap:wrap;gap:14px;align-items:baseline;padding:1px 0 4px;margin-left:calc(3.4em + 35px);font-size:.72rem;color:var(--red);letter-spacing:.06em}
+.ol-meta input[type="date"]{font-family:inherit;font-size:.75rem;color:var(--red);border:none;border-bottom:1px solid var(--line);background:none;padding:1px 0}
+.ol-meta input[type="date"]:focus{outline:none;border-bottom-color:var(--red)}
+.ol-meta .expand{border:1px solid var(--line);background:#fff;color:var(--muted);cursor:pointer;font-family:inherit;font-size:.68rem;letter-spacing:.08em;padding:1px 10px}
+.ol-meta .expand:hover{border-color:var(--red);color:var(--red)}
+.ol-vis{margin-left:calc(3.4em + 35px);padding:0 0 4px}
+.ol-vis ul.items{margin-top:0}
+.ol-vis ul.items textarea{font-size:.85rem;line-height:1.7}
+.ol-real{margin:4px 0 10px;padding:8px 12px 10px;background:var(--panel);border-left:3px solid var(--sage)}
+.ol-real .rh{font-size:.75rem;font-weight:700;letter-spacing:.1em;color:var(--sage);margin-bottom:2px}
+.ol-real ul.items{margin-top:0}
+.ol-real ul.items textarea{font-size:.85rem;line-height:1.7}
+.ol-add{border:none;background:none;cursor:pointer;font-family:inherit;font-size:.78rem;color:var(--muted);padding:4px 0 0}
+.ol-add:hover{color:var(--ink)}
+
 /* ---------- overview (全体を見渡す) ---------- */
 .ov-wrap{display:flex;flex-direction:column}
 .ov-sec{border-top:1px solid var(--ink);padding-top:16px;margin-bottom:54px}
@@ -408,10 +412,15 @@ footer{margin-top:60px;text-align:center;color:var(--muted);font-size:.7rem;lett
 
 /* ---------- print ---------- */
 @media print{
+  /* 背景色を落とされるとD行・現実列・矢印が「白地に白文字」になるため強制する */
+  *{-webkit-print-color-adjust:exact !important;print-color-adjust:exact !important}
   body{padding:10mm}
+  .ol-row.empty{display:none}          /* 空の行動ステップは配布物に出さない */
+  .ol-item{break-inside:avoid}
+  .dchk{border-color:var(--ink) !important}
   .ov-sec{break-before:page}
   .ov-sec:first-of-type{break-before:auto}
-  .add-opt,.add-item,.add-step,.add-cat,.x,.px,.sctl,.mvs,.grip,.cardboard-head .add-opt{display:none!important}
+  .add-opt,.add-item,.add-step,.x,.px,.sctl,.mvs,.grip,.cardboard-head .add-opt{display:none!important}
   .cardboard{border-style:solid}
   .file-actions,.modes,footer .noprint{display:none!important}
   .grid{grid-template-columns:repeat(3,1fr)!important;gap:8px}
@@ -503,8 +512,9 @@ footer{margin-top:60px;text-align:center;color:var(--muted);font-size:.7rem;lett
     <p class="note">・ブラウザの履歴・サイトデータを消去すると、端末内の下書きも消えます。残したい内容は必ずJSONで保存してください。<br>
     ・プライベートブラウズ（シークレットモード）では自動保存が効かないことがあります。<br>
     ・各タブの「シート」バーの「＋」で、どのツールもシートを複数枚作れます（複数事業・複数人数分など）。シートが2枚以上あるときは「比較」で全シートの概要を並べて見られます。<br>
-    ・パフォーマンス評価では、カード末尾の「＋ 評価項目を追加」で項目を必要な数だけ増やせます。項目カードにマウスを乗せると右上に「×」が出て、その項目を削除できます（最後の1項目は残ります）。<br>
     ・緊張構造チャートでは、各行動ステップの「チャートに展開」で、そのステップを「創り出したいもの」にしたサブチャートを無限に掘り下げられます（テレスコーピング）。上部のパンくずで親チャートに戻れます。<br>
+    ・行動ステップには<b>完了チェック</b>と<b>担当</b>を入れられます。完了にすると取り消し線が付き、サマリーに完了件数が出ます。<br>
+    ・「全体を見渡す」の緊張構造チャートは、掘り下げたサブチャートも <b>1 / 1-1 / 1-1-1</b> の階層アウトラインで全部展開されます（各階層の「今のリアリティ」も一緒に出ます）。ここでもそのまま編集でき、印刷では空の行動ステップは出力されません。<br>
     ・次のクライアントに移るときは「新規セッション」ボタンで、保存してから全体をまっさらにできます。</p>
   </div>
 </div>
@@ -526,7 +536,7 @@ const BIZ_CATS = [
 ];
 const P_BIN = ['',''];               // 個人版はシンボルのみ
 const P_TR  = ['','',''];
-const N_PERSONAL = 5;   // パフォーマンス評価：新規シートの初期項目数（画面上で追加・削除できる）
+const N_PERSONAL = 9;
 
 /* ---------- state ---------- */
 let mode = 'q13';   // 'q13' | 'biz' | 'personal' | 'ddm'
@@ -571,11 +581,14 @@ function moveElem(s,from,to){
   s.realityCells.splice(to,0,rv);
   render();
 }
+/* 行動ステップ1件。done（完了）と owner（担当）は v1.4 で追加。
+   旧データには無いので applyCompat() で補う。 */
+const blankAction = (text,due) => ({text:text||'',due:due||'',done:false,owner:''});
 const blankTension = () => ({
   meta:{title:'',date:today()},
   vision:{items:[''],date:''},
   reality:{items:[''],date:''},
-  actions:[{text:'',due:''},{text:'',due:''},{text:'',due:''}]
+  actions:[blankAction(),blankAction(),blankAction()]
 });
 const blankPersonal = () => ({meta:{name:'',role:'',date:today()}, titles:Array(N_PERSONAL).fill(''), cells:Array.from({length:N_PERSONAL},blank)});
 const blankBiz = () => ({meta:{name:'',date:today()}, cells:BIZ_CATS.map(blank)});
@@ -604,7 +617,7 @@ function usedBiz(s){
 function usedTension(s){
   return !!(s.meta.title.trim()||s.vision.items.some(t=>t.trim())||s.vision.date||
     s.reality.items.some(t=>t.trim())||s.reality.date||
-    s.actions.some(a=>a.text.trim()||a.due));
+    s.actions.some(a=>a.text.trim()||a.due||a.owner||a.done||a.sub));
 }
 function usedPersonal(s){
   return !!(s.meta.name.trim()||s.meta.role.trim()||s.titles.some(t=>t.trim())||
@@ -624,8 +637,24 @@ const $tally=document.getElementById('tally');
 const $sumbody=document.getElementById('sumbody');
 
 /* ---------- render ---------- */
-function syncSummary(){if(view==='tabs')renderSummary();}
+function syncSummary(){if(view==='tabs'){renderSummary();renderInstBar();}}
+/* 再描画は $grid を作り直すため、そのままだとスクロール位置が先頭に戻ってしまう。
+   表示中の文脈（ビュー/タブ/シート/階層）が変わっていなければ位置を復元し、
+   別の内容に切り替わったときだけ先頭に戻す。 */
+let lastCtx=null;
+const ctxKey=()=>[view,mode,compareOn?'cmp':'',ui[mode],ui.tpath.join('.')].join('|');
 function render(){
+  const prevCtx=lastCtx;
+  const sy=window.pageYOffset||document.documentElement.scrollTop||0;
+  renderCore();
+  lastCtx=ctxKey();
+  try{
+    if(prevCtx!==null&&prevCtx===lastCtx){if(sy)window.scrollTo(0,sy);}
+    else if(prevCtx!==null){window.scrollTo(0,0);}
+  }catch(e){}
+}
+
+function renderCore(){
   const tabs=document.querySelector('.modes');
   const sumSec=document.querySelector('.summary');
   const bv=document.getElementById('btn-view');
@@ -817,7 +846,10 @@ function fillCmpBody(body,m,s){
     const pv=document.createElement('div');pv.style.cssText='font-size:.78rem;margin:2px 0 6px;';pv.textContent=trunc(v);body.append(pv);
     body.append(cmpRow('今の現実',''));
     const pr=document.createElement('div');pr.style.cssText='font-size:.78rem;margin:2px 0 6px;color:var(--sage)';pr.textContent=trunc(r);body.append(pr);
-    body.append(cmpRow('行動ステップ','<span class="sym-p">'+acts.length+'</span><span class="sym-z">件</span>'+(noDue?'　<span class="sym-m">期日未設定'+noDue+'</span>':'')));
+    const done=acts.filter(a=>a.done).length;
+    body.append(cmpRow('行動ステップ','<span class="sym-p">'+acts.length+'</span><span class="sym-z">件</span>'+
+      '　<span class="sym-z">完了</span><span class="sym-p">'+done+'</span>'+
+      (noDue?'　<span class="sym-m">期日未設定'+noDue+'</span>':'')));
   }
 }
 function renderMeta(container,m,s){
@@ -1018,9 +1050,9 @@ function renderDdm(container,s){
     });
     const w=document.createElement('div');w.className='ewrap';
     const grip=document.createElement('span');grip.className='grip';grip.textContent='⠿';grip.title='ドラッグで上下に並べ替え';
-    const n=document.createElement('span');n.className='num';n.textContent=el.id;
+    const n=document.createElement('span');n.className='num';n.textContent=ei+1;   /* 番号は常に上からの位置（並べ替えで振り直す） */
     const inp=document.createElement('input');
-    inp.placeholder='要素 '+el.id;inp.value=el.label;
+    inp.placeholder='要素 '+(ei+1);inp.value=el.label;
     inp.addEventListener('input',()=>{
       el.label=inp.value;
       if(cardInputs[ei])cardInputs[ei].value=inp.value;   /* カード側へ同期 */
@@ -1046,7 +1078,7 @@ function renderDdm(container,s){
     mv.append(up,dn);
     w.append(grip,n,inp,tc,mv);th.append(w);tr.append(th);
 
-    const elName=()=>el.label||('要素 '+el.id);
+    const elName=()=>el.label||('要素 '+(ei+1));
     s.patterns.forEach((pt,pi)=>{
       const td=document.createElement('td');
       td.append(cellBtn(pt.cells[ei],
@@ -1082,13 +1114,23 @@ function renderDdm(container,s){
   tbl.append(tbody);scroll.append(tbl);container.append(scroll);
 
   /* ---- カードを生成（表の後：input参照の同期のため） ---- */
-  const defPos=i=>({x:16+(i%4)*216, y:16+Math.floor(i/4)*126});
+  /* ボード幅に合わせて列数を決める（固定4列だと狭い画面でカードが画面外に隠れて掴めなくなる） */
+  const CARD_W=196, CARD_H=110, GAP_X=216, GAP_Y=126;
+  const boardW=board.clientWidth||board.offsetWidth||900;
+  const cols=Math.max(1,Math.floor((boardW-16)/GAP_X))||1;
+  const defPos=i=>({x:16+(i%cols)*GAP_X, y:16+Math.floor(i/cols)*GAP_Y});
+  const rows=Math.ceil(s.elements.length/cols);
+  board.style.height=Math.max(420,rows*GAP_Y+CARD_H-GAP_Y+30)+'px';
+  const maxX=Math.max(0,boardW-CARD_W);
   s.elements.forEach((el,ei)=>{
     const card=document.createElement('div');card.className='ecard';
     if(el.x==null||el.y==null){const p=defPos(ei);el.x=p.x;el.y=p.y;}
+    /* 画面外に取り残されたカードを引き戻す */
+    if(el.x>maxX)el.x=maxX;
+    if(el.x<0)el.x=0;
     card.style.left=el.x+'px';card.style.top=el.y+'px';
     const ch=document.createElement('div');ch.className='chead';
-    const n=document.createElement('span');n.className='num';n.textContent=el.id;
+    const n=document.createElement('span');n.className='num';n.textContent=ei+1;   /* 表の番号と一致させる */
     ch.append(n);
     const rv=s.realityCells[ei];
     const rm=document.createElement('span');
@@ -1098,7 +1140,7 @@ function renderDdm(container,s){
     ch.append(rm);
     card.append(ch);
     const ci=document.createElement('input');
-    ci.placeholder='要素 '+el.id;ci.value=el.label;
+    ci.placeholder='要素 '+(ei+1);ci.value=el.label;
     ci.addEventListener('input',()=>{
       el.label=ci.value;
       if(tableInputs[ei])tableInputs[ei].value=ci.value;   /* 表側へ同期 */
@@ -1156,8 +1198,26 @@ function renderDdm(container,s){
 const blankSub=(text,due)=>({
   vision:{items:[text||''],date:due||''},
   reality:{items:[''],date:''},
-  actions:[{text:'',due:''},{text:'',due:''},{text:'',due:''}]
+  actions:[blankAction(),blankAction(),blankAction()]
 });
+/* 完了チェック（タブ表示・アウトライン共用） */
+function doneChk(a){
+  const b=document.createElement('button');
+  b.className='dchk'+(a.done?' on':'');
+  b.textContent='✓';
+  b.title=a.done?'完了を取り消す':'完了にする';
+  b.setAttribute('aria-pressed',a.done?'true':'false');
+  b.addEventListener('click',()=>{a.done=!a.done;render();});
+  return b;
+}
+/* 担当（タブ表示・アウトライン共用） */
+function ownerField(a){
+  const l=document.createElement('label');l.className='owner-field';l.append('担当');
+  const i=document.createElement('input');i.type='text';i.value=a.owner||'';i.placeholder='—';
+  i.addEventListener('input',()=>{a.owner=i.value;syncSummary();});
+  l.append(i);
+  return l;
+}
 function chartAt(root,path){
   let c=root;
   for(let k=0;k<path.length;k++){
@@ -1184,6 +1244,89 @@ function tensionCur(){
   let c=chartAt(root,ui.tpath);
   if(!c){ui.tpath=[];c=root;}
   return c;
+}
+
+/* 全体を見渡す用：行動ステップを階層アウトラインで再帰描画。
+   サブチャートのビジョン1行目は親ステップ文と同期しているので重複表示しない。
+   itemsListFn は renderTension 内のクロージャを受け取る（項目の追加/削除つきリスト）。 */
+function renderOutline(host,chart,path,itemsListFn){
+  chart.actions.forEach(function(a,i){
+    const num=path.concat([i+1]).join('-');
+    const item=document.createElement('div');item.className='ol-item';
+
+    /* 空行（文も期日も担当もサブも無い）は印刷時に隠す */
+    const isEmpty=!a.text.trim()&&!a.due&&!a.owner&&!(a.sub&&subCount(a.sub));
+    const row=document.createElement('div');
+    row.className='ol-row'+(a.done?' done':'')+(isEmpty?' empty':'');
+    row.append(doneChk(a));
+    const no=document.createElement('span');no.className='no';no.textContent=num;
+    const ta=document.createElement('textarea');ta.rows=1;ta.value=a.text;ta.placeholder='行動ステップ '+num;
+    ta.addEventListener('input',()=>{
+      a.text=ta.value;
+      if(a.sub)a.sub.vision.items[0]=ta.value;   /* サブチャートのビジョンへ同期 */
+      autoGrow(ta);syncSummary();
+    });
+    const ctl=document.createElement('span');ctl.className='sctl';
+    const up=document.createElement('button');up.textContent='▲';up.title='上へ';up.disabled=(i===0);
+    up.addEventListener('click',()=>{const t=chart.actions.splice(i,1)[0];chart.actions.splice(i-1,0,t);render();});
+    const dn=document.createElement('button');dn.textContent='▼';dn.title='下へ';dn.disabled=(i===chart.actions.length-1);
+    dn.addEventListener('click',()=>{const t=chart.actions.splice(i,1)[0];chart.actions.splice(i+1,0,t);render();});
+    const del=document.createElement('button');del.className='del';del.textContent='×';del.title='削除';
+    del.addEventListener('click',()=>{
+      if(a.sub&&subCount(a.sub)>0&&!confirm('このステップにはサブチャートがあります。一緒に削除しますか？'))return;
+      if(chart.actions.length<=1){chart.actions[0]=blankAction();render();return;}
+      chart.actions.splice(i,1);render();
+    });
+    ctl.append(up,dn,del);
+    row.append(no,ta,ctl);
+    item.append(row);
+
+    /* 期日・担当・展開 */
+    const meta=document.createElement('div');meta.className='ol-meta';
+    meta.append('期日');
+    const di=document.createElement('input');di.type='date';di.value=a.due;
+    di.addEventListener('input',()=>{
+      a.due=di.value;
+      if(a.sub)a.sub.vision.date=di.value;   /* サブチャートの達成期日と同期 */
+      syncSummary();
+    });
+    meta.append(di,ownerField(a));
+    const ex=document.createElement('button');ex.className='expand';
+    ex.textContent=a.sub?'＋ ステップを足す':'チャートに展開';
+    ex.title=a.sub?'このサブチャートに行動ステップを追加する'
+                  :'このステップを「創り出したいもの」にしたサブチャートを作る';
+    ex.addEventListener('click',()=>{
+      if(!a.sub){a.sub=blankSub(a.text,a.due);}
+      else{a.sub.actions.push(blankAction());}
+      render();
+    });
+    meta.append(ex);
+    item.append(meta);
+
+    if(a.sub){
+      /* サブチャートのビジョン2行目以降（1行目＝このステップ文なので出さない） */
+      const vw=document.createElement('div');vw.className='ol-vis';
+      itemsListFn(vw,a.sub.vision.items,'創り出したい成果を書く',null,1);
+      item.append(vw);
+      /* 子ステップ */
+      const kids=document.createElement('div');kids.className='ol-kids';
+      renderOutline(kids,a.sub,path.concat([i+1]),itemsListFn);
+      /* このサブチャートの今のリアリティ */
+      const real=document.createElement('div');real.className='ol-real';
+      const rh=document.createElement('div');rh.className='rh';
+      rh.textContent='今のリアリティ'+(a.sub.reality.date?'（'+a.sub.reality.date+'）':'');
+      real.append(rh);
+      itemsListFn(real,a.sub.reality.items,'今の現実をあるがままに書く');
+      kids.append(real);
+      item.append(kids);
+    }
+    host.append(item);
+    autoGrow(ta);
+  });
+  const add=document.createElement('button');add.className='ol-add';
+  add.textContent='＋ 行動ステップを追加'+(path.length?'（'+path.join('-')+' の下に）':'');
+  add.addEventListener('click',()=>{chart.actions.push(blankAction());render();});
+  host.append(add);
 }
 
 function renderTension(container,s,plain){
@@ -1220,16 +1363,22 @@ function renderTension(container,s,plain){
     container.append(bc);
   }
 
-  const itemsList=(host,arr,ph,extra)=>{
+  /* startAt: 先頭から何件を表示しないか（サブチャートのビジョン1行目を隠す用） */
+  const itemsList=(host,arr,ph,extra,startAt)=>{
+    const from=startAt||0;
     const ul=document.createElement('ul');ul.className='items';
     arr.forEach((txt,i)=>{
+      if(i<from)return;
       const li=document.createElement('li');
       const ta=document.createElement('textarea');ta.rows=1;ta.value=txt;ta.placeholder=ph;
       ta.addEventListener('input',()=>{arr[i]=ta.value;if(extra)extra(i,ta.value);autoGrow(ta);syncSummary();});
       const x=document.createElement('button');x.className='x';x.textContent='×';x.title='削除';
       x.addEventListener('click',()=>{
-        if(arr.length<=1){arr[0]='';if(extra)extra(0,'');render();return;}
-        arr.splice(i,1);render();
+        if(arr.length<=from+1){arr[from]='';if(extra)extra(from,'');render();return;}
+        arr.splice(i,1);
+        /* 1行目を消したときは、繰り上がった行を親ステップ文へ再同期する */
+        if(extra)extra(0,arr[0]||'');
+        render();
       });
       li.append(ta,x);ul.append(li);
     });
@@ -1238,6 +1387,19 @@ function renderTension(container,s,plain){
     add.addEventListener('click',()=>{arr.push('');render();});
     host.append(add);
     ul.querySelectorAll('textarea').forEach(autoGrow);
+  };
+
+  /* 今の現実（ルートの極） */
+  const buildRealityPole=(ch)=>{
+    const rp=document.createElement('div');rp.className='pole reality';
+    const rh=document.createElement('div');rh.className='pole-head';
+    const rl=document.createElement('div');rl.className='pole-label';rl.textContent='創り出したいものからみた今の現実';
+    const rd=document.createElement('label');rd.className='date-field';rd.append('時点');
+    const rdi=document.createElement('input');rdi.type='date';rdi.value=ch.reality.date;
+    rdi.addEventListener('input',()=>{ch.reality.date=rdi.value;syncSummary();});
+    rd.append(rdi);rh.append(rl,rd);rp.append(rh);
+    itemsList(rp,ch.reality.items,'今の現実をあるがままに書く');
+    return rp;
   };
 
   /* 創り出したいもの（サブチャートでは親の行動ステップと双方向同期） */
@@ -1256,14 +1418,28 @@ function renderTension(container,s,plain){
     pa?function(i,val){if(i===0)pa.text=val;}:null);   /* 1行目は親ステップの文と同期 */
   container.append(vp);
 
+  /* 全体を見渡す：行動ステップを階層アウトラインで展開（サブチャートも全部出す） */
+  if(plain){
+    const tol=document.createElement('div');tol.className='tol';
+    const tl=document.createElement('div');tl.className='tol-label';tl.textContent='行動ステップ';
+    tol.append(tl);
+    renderOutline(tol,cur,[],itemsList);
+    container.append(tol);
+    container.append(buildRealityPole(cur));
+    container.querySelectorAll('textarea').forEach(autoGrow);
+    return;
+  }
+
   /* 行動ステップ＋矢印 */
   const steps=document.createElement('div');steps.className='steps';
   const sl=document.createElement('div');sl.className='steps-label';sl.textContent='行動ステップ';
   steps.append(sl);
   cur.actions.forEach(function(a,i){
-    const st=document.createElement('div');st.className='step';
+    const st=document.createElement('div');st.className='step'+(a.done?' done':'');
     const row=document.createElement('div');row.className='srow';
+    row.append(doneChk(a));
     const ta=document.createElement('textarea');ta.rows=1;ta.value=a.text;ta.placeholder='行動ステップ '+(i+1);
+    if(a.done)ta.style.cssText='text-decoration:line-through;color:var(--muted)';
     ta.addEventListener('input',()=>{
       a.text=ta.value;
       if(a.sub)a.sub.vision.items[0]=ta.value;   /* サブチャートのビジョンへ同期 */
@@ -1277,7 +1453,7 @@ function renderTension(container,s,plain){
     const del=document.createElement('button');del.className='del';del.textContent='×';del.title='削除';
     del.addEventListener('click',()=>{
       if(a.sub&&subCount(a.sub)>0&&!confirm('このステップにはサブチャートがあります。一緒に削除しますか？'))return;
-      if(cur.actions.length<=1){cur.actions[0]={text:'',due:''};render();return;}
+      if(cur.actions.length<=1){cur.actions[0]=blankAction();render();return;}
       cur.actions.splice(i,1);render();
     });
     ctl.append(up,dn,del);
@@ -1289,7 +1465,7 @@ function renderTension(container,s,plain){
       if(a.sub)a.sub.vision.date=di.value;
       syncSummary();
     });
-    sm.append(di);
+    sm.append(di,ownerField(a));
     if(!plain){
       /* テレスコーピング：このステップを次のチャートの「創り出したいもの」に */
       const cnt=subCount(a.sub);
@@ -1308,20 +1484,11 @@ function renderTension(container,s,plain){
     autoGrow(ta);
   });
   const addS=document.createElement('button');addS.className='add-step';addS.textContent='＋ 行動ステップを追加';
-  addS.addEventListener('click',()=>{cur.actions.push({text:'',due:''});render();});
+  addS.addEventListener('click',()=>{cur.actions.push(blankAction());render();});
   steps.append(addS);
   container.append(steps);
 
-  /* 今の現実 */
-  const rp=document.createElement('div');rp.className='pole reality';
-  const rh=document.createElement('div');rh.className='pole-head';
-  const rl=document.createElement('div');rl.className='pole-label';rl.textContent='創り出したいものからみた今の現実';
-  const rd=document.createElement('label');rd.className='date-field';rd.append('時点');
-  const rdi=document.createElement('input');rdi.type='date';rdi.value=cur.reality.date;
-  rdi.addEventListener('input',()=>{cur.reality.date=rdi.value;syncSummary();});
-  rd.append(rdi);rh.append(rl,rd);rp.append(rh);
-  itemsList(rp,cur.reality.items,'今の現実をあるがままに書く');
-  container.append(rp);
+  container.append(buildRealityPole(cur));
 
   /* すべて画面に取り付いた後で高さを再計算（複数行の内容が1行に潰れるのを防ぐ） */
   container.querySelectorAll('textarea').forEach(autoGrow);
@@ -1338,20 +1505,11 @@ function renderGrid(container,m,s){
     /* head */
     const head=document.createElement('div');head.className='cat-head';
     if(def.editable){
-      head.classList.add('editable');
       const inp=document.createElement('input');
       inp.placeholder='評価項目 '+(i+1);
       inp.value=s.titles[i];
       inp.addEventListener('input',()=>{s.titles[i]=inp.value;syncSummary();});
       head.append(inp);
-      /* 評価項目の削除（最後の1項目は残す） */
-      const x=document.createElement('button');x.className='x';x.textContent='×';x.title='この評価項目を削除';
-      x.addEventListener('click',()=>{
-        if(s.titles.length<=1){alert('最後の1項目は削除できません。');return;}
-        if(!confirm('「'+(s.titles[i].trim()||('評価項目 '+(i+1)))+'」を削除しますか？'))return;
-        s.titles.splice(i,1);s.cells.splice(i,1);render();
-      });
-      head.append(x);
     }else{
       const t=document.createElement('div');t.className='t';t.textContent=def.t;head.append(t);
     }
@@ -1372,18 +1530,6 @@ function renderGrid(container,m,s){
     container.append(card);
     autoGrow(ta);
   });
-  /* 評価項目を追加（パフォーマンス評価のみ。事業分析の9分野は固定） */
-  if(m==='personal'){
-    const add=document.createElement('button');add.className='add-cat';
-    add.textContent='＋ 評価項目を追加';
-    add.title='このシートに評価項目を1つ追加';
-    add.addEventListener('click',()=>{
-      s.titles.push('');
-      s.cells.push(blank());
-      render();
-    });
-    container.append(add);
-  }
 }
 function qLabel(t){const d=document.createElement('div');d.className='q';d.textContent=t;return d;}
 
@@ -1477,7 +1623,7 @@ function renderQ13Summary(){
 function renderTensionSummary(){
   const s=tensionCur();
   document.getElementById('sumhint').textContent='創り出したいものと今の現実の間の緊張構造が、行動ステップを生みます。ステップと期日の一覧です。';
-  document.getElementById('sumhead').innerHTML='<tr><th style="width:6%">#</th><th>行動ステップ</th><th style="width:18%">期日</th></tr>';
+  document.getElementById('sumhead').innerHTML='<tr><th style="width:6%">#</th><th>行動ステップ</th><th style="width:14%">担当</th><th style="width:16%">期日</th></tr>';
   const v=s.vision.items.filter(t=>t.trim()).length;
   const r=s.reality.items.filter(t=>t.trim()).length;
   const acts=s.actions.filter(a=>a.text.trim());
@@ -1485,12 +1631,17 @@ function renderTensionSummary(){
     '<span>創り出したいもの<b>'+(v||'—')+'</b></span>'+
     '<span>今の現実<b>'+(r||'—')+'</b></span>'+
     '<span>行動ステップ<b>'+acts.length+'</b></span>'+
+    '<span>完了<b>'+acts.filter(a=>a.done).length+' / '+acts.length+'</b></span>'+
     '<span class="neg">期日未設定<b>'+acts.filter(a=>!a.due).length+'</b></span>';
   $sumbody.innerHTML='';
   s.actions.forEach((a,i)=>{
     if(!a.text.trim())return;
     const tr=document.createElement('tr');
-    tr.innerHTML='<td class="c zero">'+(i+1)+'</td><td>'+esc(a.text)+'</td>'+
+    const txt=a.done
+      ? '<span style="text-decoration:line-through;color:var(--muted)">'+esc(a.text)+'</span> <span class="plus">完了</span>'
+      : esc(a.text);
+    tr.innerHTML='<td class="c zero">'+(i+1)+'</td><td>'+txt+'</td>'+
+      '<td class="c">'+(a.owner?esc(a.owner):'<span class="none">—</span>')+'</td>'+
       '<td class="c">'+(a.due?esc(a.due):'<span class="none">—</span>')+'</td>';
     $sumbody.append(tr);
   });
@@ -1538,7 +1689,8 @@ function doSave(){
   const mm=resolve(mode).meta;
   const nm=(mm.name||mm.theme||mm.title||'事業戦略プランニング')+'_'+(mm.date||today());
   a.download=nm+'.json';
-  a.click();URL.revokeObjectURL(a.href);
+  a.click();
+  setTimeout(()=>URL.revokeObjectURL(a.href),1000);   /* 即時 revoke はSafari/Firefoxでダウンロードが落ちる */
 }
 document.getElementById('btn-save').addEventListener('click',doSave);
 /* 新規セッション：全ツールをまっさらに */
@@ -1582,6 +1734,34 @@ document.getElementById('btn-reset').addEventListener('click',()=>{
   render();
 });
 
+/* --- 形が欠けている入力でも落ちないように整える（旧JSON・手編集JSON対策） --- */
+function fixItems(o,key){
+  if(!o||typeof o!=='object')return {items:[''],date:''};
+  if(!Array.isArray(o.items)||!o.items.length)o.items=[''];
+  o.items=o.items.map(t=>typeof t==='string'?t:String(t==null?'':t));
+  if(typeof o.date!=='string')o.date='';
+  return o;
+}
+/* 行動ステップを再帰的に正規化。done/owner を補い、サブチャートも同じ形に揃える */
+function fixActions(chart){
+  if(!Array.isArray(chart.actions)||!chart.actions.length)chart.actions=[blankAction(),blankAction(),blankAction()];
+  chart.actions=chart.actions.map(function(a){
+    if(!a||typeof a!=='object')a=blankAction();
+    if(typeof a.text!=='string')a.text='';
+    if(typeof a.due!=='string')a.due='';
+    if(typeof a.done!=='boolean')a.done=false;      /* v1.4 追加 */
+    if(typeof a.owner!=='string')a.owner='';        /* v1.4 追加 */
+    if(a.sub)a.sub=fixChart(a.sub);
+    return a;
+  });
+  return chart;
+}
+function fixChart(c){
+  if(!c||typeof c!=='object')c={};
+  c.vision=fixItems(c.vision);
+  c.reality=fixItems(c.reality);
+  return fixActions(c);
+}
 function applyCompat(){  /* 旧バージョンのデータとの互換 */
   if(state.personal&&!state.personals){state.personals=[state.personal];delete state.personal;}
   if(state.ddm&&!state.ddms){state.ddms=[state.ddm];delete state.ddm;}
@@ -1592,26 +1772,6 @@ function applyCompat(){  /* 旧バージョンのデータとの互換 */
   if(!Array.isArray(state.bizs)||!state.bizs.length)state.bizs=[blankBiz()];
   if(!Array.isArray(state.tensions)||!state.tensions.length)state.tensions=[blankTension()];
   if(!Array.isArray(state.personals)||!state.personals.length)state.personals=[blankPersonal()];
-  /* パフォーマンス評価：項目数が可変になったため、旧データ（9項目固定）も含めて
-     titles と cells の長さを揃える。旧データの項目数はそのまま保たれる。 */
-  state.personals=state.personals.map(function(p){
-    const q=(p&&typeof p==='object')?p:blankPersonal();
-    if(!q.meta||typeof q.meta!=='object')q.meta={name:'',role:'',date:today()};
-    if(q.meta.name===undefined)q.meta.name='';
-    if(q.meta.role===undefined)q.meta.role='';
-    if(q.meta.date===undefined)q.meta.date=today();
-    if(!Array.isArray(q.titles))q.titles=[];
-    if(!Array.isArray(q.cells))q.cells=[];
-    const n=Math.max(q.titles.length,q.cells.length,1);
-    while(q.titles.length<n)q.titles.push('');
-    while(q.cells.length<n)q.cells.push(blank());
-    q.titles=q.titles.slice(0,n).map(t=>typeof t==='string'?t:'');
-    q.cells=q.cells.slice(0,n).map(function(c){
-      if(!c||typeof c!=='object')return blank();
-      return {bin:(c.bin===undefined?null:c.bin), tr:(c.tr===undefined?null:c.tr), memo:(c.memo||'')};
-    });
-    return q;
-  });
   if(!Array.isArray(state.ddms)||!state.ddms.length)state.ddms=[blankDdm()];
   state.ddms=state.ddms.map(function(d){
     if(d.options||!d.elements){  /* 旧・意思決定データを新形式へ変換 */
@@ -1627,13 +1787,57 @@ function applyCompat(){  /* 旧バージョンのデータとの互換 */
     }
     return d;
   });
+  /* 意思決定：要素の type と、パターン／現実のセル長を要素数に揃える */
+  state.ddms.forEach(function(d){
+    if(!Array.isArray(d.elements)||!d.elements.length)d.elements=blankDdm().elements;
+    d.elements.forEach((e,i)=>{if(!e.id)e.id=i+1;if(e.type!==3)e.type=2;if(typeof e.label!=='string')e.label='';});
+    const n=d.elements.length;
+    const fit=arr=>{const a=Array.isArray(arr)?arr.slice(0,n):[];while(a.length<n)a.push(null);return a;};
+    if(!Array.isArray(d.patterns)||!d.patterns.length)d.patterns=[blankPattern()];
+    d.patterns.forEach(p=>{p.cells=fit(p.cells);if(p.d===undefined)p.d=null;});
+    d.realityCells=fit(d.realityCells);
+    if(d.realityD===undefined)d.realityD=null;
+    if(typeof d.reality!=='string')d.reality='';
+    if(!d.meta)d.meta={theme:'',yn:null,date:today()};
+    if(d.meta.yn===undefined)d.meta.yn=null;
+  });
+  /* 緊張構造：全シート・全階層の行動ステップに done / owner を補う */
+  state.tensions=state.tensions.map(function(t){
+    if(!t||typeof t!=='object')t=blankTension();
+    if(!t.meta)t.meta={title:'',date:today()};
+    return fixChart(t);
+  });
+  /* パフォーマンス評価：titles と cells の欠落を補う */
+  state.personals.forEach(function(p){
+    if(!p.meta)p.meta={name:'',role:'',date:today()};
+    if(!Array.isArray(p.titles))p.titles=Array(N_PERSONAL).fill('');
+    while(p.titles.length<N_PERSONAL)p.titles.push('');
+    if(!Array.isArray(p.cells))p.cells=Array.from({length:N_PERSONAL},blank);
+    while(p.cells.length<p.titles.length)p.cells.push(blank());
+  });
+  /* 事業分析：cells を9分野に揃える */
+  state.bizs.forEach(function(b){
+    if(!b.meta)b.meta={name:'',date:today()};
+    if(!Array.isArray(b.cells))b.cells=BIZ_CATS.map(blank);
+    while(b.cells.length<BIZ_CATS.length)b.cells.push(blank());
+  });
+  /* 11の質問：businesses と answers の欠落を補う */
+  state.q13s.forEach(function(q){
+    if(!q.meta)q.meta={date:today()};
+    if(!Array.isArray(q.businesses)||!q.businesses.length)q.businesses=[blankBiz13()];
+    q.businesses.forEach(b=>{
+      if(typeof b.name!=='string')b.name='';
+      if(!Array.isArray(b.answers))b.answers=Array(Q13.length).fill('');
+      while(b.answers.length<Q13.length)b.answers.push('');
+    });
+  });
   ui={q13:0,biz:0,personal:0,ddm:0,tension:0,tpath:[]};
 }
 
 /* ---------- 端末内自動保存（localStorage） ----------
    データはこの端末のブラウザ内にだけ保存され、外部には送信されません。 */
 /* ==== バージョン（更新時はここを書き換える） ==== */
-const APP_VERSION='1.4.0（2026年8月）';
+const APP_VERSION='1.4.1（2026年8月）';
 document.getElementById('ver-footer').textContent=' ・ v'+APP_VERSION.split('（')[0];
 document.getElementById('ver-help').textContent=APP_VERSION;
 
