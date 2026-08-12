@@ -1305,6 +1305,9 @@ function renderTension(container,s,plain){
   rd.append(rdi);rh.append(rl,rd);rp.append(rh);
   itemsList(rp,cur.reality.items,'今の現実をあるがままに書く');
   container.append(rp);
+
+  /* すべて画面に取り付いた後で高さを再計算（複数行の内容が1行に潰れるのを防ぐ） */
+  container.querySelectorAll('textarea').forEach(autoGrow);
 }
 
 function renderGrid(container,m,s){
@@ -1572,7 +1575,7 @@ function applyCompat(){  /* 旧バージョンのデータとの互換 */
 /* ---------- 端末内自動保存（localStorage） ----------
    データはこの端末のブラウザ内にだけ保存され、外部には送信されません。 */
 /* ==== バージョン（更新時はここを書き換える） ==== */
-const APP_VERSION='1.3（2026年8月）';
+const APP_VERSION='1.3.1（2026年8月）';
 document.getElementById('ver-footer').textContent=' ・ v'+APP_VERSION.split('（')[0];
 document.getElementById('ver-help').textContent=APP_VERSION;
 
