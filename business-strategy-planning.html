@@ -102,9 +102,25 @@ h1 .en{font-family:'Montserrat',sans-serif;font-weight:600;font-size:.7rem;lette
 
 .cat{background:var(--card);border:1px solid var(--line);display:flex;flex-direction:column}
 .cat-head{
+  position:relative;
   background:var(--panel-soft);border-bottom:1px solid var(--line);
   padding:10px 14px 8px;min-height:52px;display:flex;align-items:center;justify-content:center;
 }
+/* 評価項目が編集できるカード（パフォーマンス評価）：右端の × の分だけ左右に余白 */
+.cat-head.editable{padding-left:26px;padding-right:26px}
+.cat-head .x{
+  position:absolute;right:5px;top:50%;transform:translateY(-50%);
+  border:none;background:none;cursor:pointer;color:var(--muted);
+  font-size:.9rem;line-height:1;padding:2px 5px;visibility:hidden;
+}
+.cat:hover .cat-head .x,.cat-head:focus-within .x{visibility:visible}
+.cat-head .x:hover{color:var(--red)}
+.add-cat{
+  border:1px dashed #CFCEC9;background:none;color:var(--muted);
+  font-family:inherit;font-size:.85rem;letter-spacing:.06em;cursor:pointer;
+  min-height:110px;padding:14px;display:flex;align-items:center;justify-content:center;
+}
+.add-cat:hover{color:var(--red);border-color:var(--red)}
 .cat-head .t{
   font-weight:700;font-size:.92rem;letter-spacing:.06em;text-align:center;line-height:1.5;
 }
@@ -395,7 +411,7 @@ footer{margin-top:60px;text-align:center;color:var(--muted);font-size:.7rem;lett
   body{padding:10mm}
   .ov-sec{break-before:page}
   .ov-sec:first-of-type{break-before:auto}
-  .add-opt,.add-item,.add-step,.x,.px,.sctl,.mvs,.grip,.cardboard-head .add-opt{display:none!important}
+  .add-opt,.add-item,.add-step,.add-cat,.x,.px,.sctl,.mvs,.grip,.cardboard-head .add-opt{display:none!important}
   .cardboard{border-style:solid}
   .file-actions,.modes,footer .noprint{display:none!important}
   .grid{grid-template-columns:repeat(3,1fr)!important;gap:8px}
@@ -487,6 +503,7 @@ footer{margin-top:60px;text-align:center;color:var(--muted);font-size:.7rem;lett
     <p class="note">・ブラウザの履歴・サイトデータを消去すると、端末内の下書きも消えます。残したい内容は必ずJSONで保存してください。<br>
     ・プライベートブラウズ（シークレットモード）では自動保存が効かないことがあります。<br>
     ・各タブの「シート」バーの「＋」で、どのツールもシートを複数枚作れます（複数事業・複数人数分など）。シートが2枚以上あるときは「比較」で全シートの概要を並べて見られます。<br>
+    ・パフォーマンス評価では、カード末尾の「＋ 評価項目を追加」で項目を必要な数だけ増やせます。項目カードにマウスを乗せると右上に「×」が出て、その項目を削除できます（最後の1項目は残ります）。<br>
     ・緊張構造チャートでは、各行動ステップの「チャートに展開」で、そのステップを「創り出したいもの」にしたサブチャートを無限に掘り下げられます（テレスコーピング）。上部のパンくずで親チャートに戻れます。<br>
     ・次のクライアントに移るときは「新規セッション」ボタンで、保存してから全体をまっさらにできます。</p>
   </div>
@@ -509,7 +526,7 @@ const BIZ_CATS = [
 ];
 const P_BIN = ['',''];               // 個人版はシンボルのみ
 const P_TR  = ['','',''];
-const N_PERSONAL = 9;
+const N_PERSONAL = 5;   // パフォーマンス評価：新規シートの初期項目数（画面上で追加・削除できる）
 
 /* ---------- state ---------- */
 let mode = 'q13';   // 'q13' | 'biz' | 'personal' | 'ddm'
@@ -1321,11 +1338,20 @@ function renderGrid(container,m,s){
     /* head */
     const head=document.createElement('div');head.className='cat-head';
     if(def.editable){
+      head.classList.add('editable');
       const inp=document.createElement('input');
       inp.placeholder='評価項目 '+(i+1);
       inp.value=s.titles[i];
       inp.addEventListener('input',()=>{s.titles[i]=inp.value;syncSummary();});
       head.append(inp);
+      /* 評価項目の削除（最後の1項目は残す） */
+      const x=document.createElement('button');x.className='x';x.textContent='×';x.title='この評価項目を削除';
+      x.addEventListener('click',()=>{
+        if(s.titles.length<=1){alert('最後の1項目は削除できません。');return;}
+        if(!confirm('「'+(s.titles[i].trim()||('評価項目 '+(i+1)))+'」を削除しますか？'))return;
+        s.titles.splice(i,1);s.cells.splice(i,1);render();
+      });
+      head.append(x);
     }else{
       const t=document.createElement('div');t.className='t';t.textContent=def.t;head.append(t);
     }
@@ -1346,6 +1372,18 @@ function renderGrid(container,m,s){
     container.append(card);
     autoGrow(ta);
   });
+  /* 評価項目を追加（パフォーマンス評価のみ。事業分析の9分野は固定） */
+  if(m==='personal'){
+    const add=document.createElement('button');add.className='add-cat';
+    add.textContent='＋ 評価項目を追加';
+    add.title='このシートに評価項目を1つ追加';
+    add.addEventListener('click',()=>{
+      s.titles.push('');
+      s.cells.push(blank());
+      render();
+    });
+    container.append(add);
+  }
 }
 function qLabel(t){const d=document.createElement('div');d.className='q';d.textContent=t;return d;}
 
@@ -1554,6 +1592,26 @@ function applyCompat(){  /* 旧バージョンのデータとの互換 */
   if(!Array.isArray(state.bizs)||!state.bizs.length)state.bizs=[blankBiz()];
   if(!Array.isArray(state.tensions)||!state.tensions.length)state.tensions=[blankTension()];
   if(!Array.isArray(state.personals)||!state.personals.length)state.personals=[blankPersonal()];
+  /* パフォーマンス評価：項目数が可変になったため、旧データ（9項目固定）も含めて
+     titles と cells の長さを揃える。旧データの項目数はそのまま保たれる。 */
+  state.personals=state.personals.map(function(p){
+    const q=(p&&typeof p==='object')?p:blankPersonal();
+    if(!q.meta||typeof q.meta!=='object')q.meta={name:'',role:'',date:today()};
+    if(q.meta.name===undefined)q.meta.name='';
+    if(q.meta.role===undefined)q.meta.role='';
+    if(q.meta.date===undefined)q.meta.date=today();
+    if(!Array.isArray(q.titles))q.titles=[];
+    if(!Array.isArray(q.cells))q.cells=[];
+    const n=Math.max(q.titles.length,q.cells.length,1);
+    while(q.titles.length<n)q.titles.push('');
+    while(q.cells.length<n)q.cells.push(blank());
+    q.titles=q.titles.slice(0,n).map(t=>typeof t==='string'?t:'');
+    q.cells=q.cells.slice(0,n).map(function(c){
+      if(!c||typeof c!=='object')return blank();
+      return {bin:(c.bin===undefined?null:c.bin), tr:(c.tr===undefined?null:c.tr), memo:(c.memo||'')};
+    });
+    return q;
+  });
   if(!Array.isArray(state.ddms)||!state.ddms.length)state.ddms=[blankDdm()];
   state.ddms=state.ddms.map(function(d){
     if(d.options||!d.elements){  /* 旧・意思決定データを新形式へ変換 */
@@ -1575,7 +1633,7 @@ function applyCompat(){  /* 旧バージョンのデータとの互換 */
 /* ---------- 端末内自動保存（localStorage） ----------
    データはこの端末のブラウザ内にだけ保存され、外部には送信されません。 */
 /* ==== バージョン（更新時はここを書き換える） ==== */
-const APP_VERSION='1.3.1（2026年8月）';
+const APP_VERSION='1.4.0（2026年8月）';
 document.getElementById('ver-footer').textContent=' ・ v'+APP_VERSION.split('（')[0];
 document.getElementById('ver-help').textContent=APP_VERSION;
 

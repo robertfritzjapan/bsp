@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>事業戦略プランニング ─ Robert Fritz Consulting</title>
+<meta name="description" content="ロバート・フリッツの事業戦略プランニングを実践するための5つのツール。">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#FFFFFF; --ink:#000000; --muted:#767470; --line:#E4E4E1;
+  --sage:#5E6763; --panel:#DCE1E1; --panel-soft:#F2F2F1; --red:#9A2827;
+  font-size:16px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--paper);color:var(--ink);font-family:'Noto Sans JP',sans-serif;line-height:1.9;padding:44px 24px 90px}
+.wrap{max-width:840px;margin:0 auto}
+.en{font-family:'Montserrat',sans-serif;letter-spacing:.22em;text-transform:uppercase}
+
+/* header */
+header{margin-bottom:64px}
+.brand-logo{height:28px;width:auto;display:block;margin-bottom:26px}
+h1{font-weight:700;font-size:1.9rem;letter-spacing:.1em;line-height:1.5}
+.sub{font-size:.72rem;color:var(--muted);margin-top:6px}
+.lede{margin-top:30px;font-size:1rem;max-width:620px}
+.lede b{font-weight:700}
+
+/* section */
+section{margin-top:74px}
+h2{font-size:.78rem;font-weight:700;letter-spacing:.2em;color:var(--muted);border-top:1px solid var(--ink);padding-top:14px;margin-bottom:30px}
+
+/* tools */
+.tool{display:grid;grid-template-columns:150px 1fr;gap:28px;align-items:start;padding:22px 0;border-bottom:1px solid var(--line)}
+.tool:last-of-type{border-bottom:none}
+@media(max-width:620px){.tool{grid-template-columns:1fr}}
+.mini{border:1px solid var(--line);background:#FCFCFB;height:96px;display:flex;align-items:center;justify-content:center}
+.mini svg{display:block}
+.tool h3{font-size:1rem;font-weight:700;letter-spacing:.08em}
+.tool .tag{font-size:.65rem;letter-spacing:.14em;color:#fff;background:var(--sage);padding:1px 10px;margin-left:10px;vertical-align:2px;font-weight:500}
+.tool .tag.opt{background:#fff;color:var(--muted);border:1px solid var(--line)}
+.tool p{font-size:.88rem;color:var(--ink);margin-top:6px;max-width:560px}
+
+/* honest section */
+.honest{background:var(--panel-soft);border-left:3px solid var(--red);padding:34px 38px;margin-top:14px}
+.honest p{font-size:.95rem;max-width:640px}
+.honest p+p{margin-top:16px}
+.honest .lead{font-weight:700;font-size:1.05rem;letter-spacing:.04em}
+
+/* paths */
+.paths{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:8px}
+@media(max-width:620px){.paths{grid-template-columns:1fr}}
+.path{border:1px solid var(--line);padding:28px 30px}
+.path h3{font-size:.95rem;font-weight:700;letter-spacing:.1em;margin-bottom:10px}
+.path p{font-size:.85rem;color:var(--ink);margin-bottom:22px}
+.btn{
+  display:inline-block;font-size:.85rem;letter-spacing:.08em;text-decoration:none;
+  border:1px solid var(--ink);color:var(--ink);padding:9px 26px;transition:all .15s;
+}
+.btn:hover{background:var(--ink);color:#fff}
+.btn.primary{background:var(--ink);color:#fff}
+.btn.primary:hover{background:var(--red);border-color:var(--red)}
+.path .note{font-size:.75rem;color:var(--muted);margin-top:14px;margin-bottom:0}
+
+/* programs */
+.progs{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+@media(max-width:620px){.progs{grid-template-columns:1fr}}
+.prog{border-top:2px solid var(--ink);padding-top:14px}
+.prog .pn{font-family:'Montserrat',sans-serif;font-weight:700;font-size:1.05rem;letter-spacing:.12em}
+.prog p{font-size:.8rem;color:var(--muted);margin-top:6px}
+
+/* book */
+.book{border:1px solid var(--line);padding:30px 34px;display:flex;gap:26px;align-items:flex-start;flex-wrap:wrap}
+.book .bt{font-size:1rem;font-weight:700;letter-spacing:.06em;line-height:1.6}
+.book .ba{font-size:.78rem;color:var(--muted);margin-top:4px}
+.book p{font-size:.88rem;margin-top:14px;max-width:560px}
+.book .btn{margin-top:18px}
+
+footer{margin-top:100px;text-align:center;color:var(--muted);font-size:.7rem;letter-spacing:.2em;font-family:'Montserrat',sans-serif}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <img class="brand-logo" src="data:image/png;base64,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" alt="Robert Fritz Consulting">
+  <h1>事業戦略プランニング</h1>
+  <div class="sub en">Business Strategy Planning</div>
+  <p class="lede">ロバート・フリッツが「事業戦略プランニング」と呼ぶ方法を、実践の場で使うための5つのツール。<br>
+  オンラインセッションの画面の上で、事業を定義し、現実を評価し、意思決定を行い、<b>創り出したいものと今の現実のあいだの緊張構造</b>を描くために作られています。ブラウザで開くだけで動き、入力はあなたの端末の外に出ません。</p>
+</header>
+
+<section>
+  <h2>5つのツール</h2>
+
+  <div class="tool">
+    <div class="mini">
+      <svg width="110" height="64" viewBox="0 0 110 64">
+        <g fill="none" stroke="#5E6763" stroke-width="1.2">
+          <rect x="4" y="6" width="30" height="10" fill="#DCE1E1" stroke="none"/>
+          <line x1="42" y1="11" x2="106" y2="11"/>
+          <line x1="4" y1="26" x2="34" y2="26"/><line x1="42" y1="26" x2="106" y2="26"/>
+          <line x1="4" y1="41" x2="34" y2="41"/><line x1="42" y1="41" x2="106" y2="41"/>
+          <line x1="4" y1="56" x2="34" y2="56"/><line x1="42" y1="56" x2="96" y2="56"/>
+        </g>
+      </svg>
+    </div>
+    <div>
+      <h3>11の質問<span class="tag">コア</span></h3>
+      <p>「何が売り物か」から「我々はどこに向かっているのか」まで。事業を定義する11の質問に答え、複数の事業を横に並べて比較する。答えられない質問こそが、次に取り組むテーマになる。</p>
+    </div>
+  </div>
+
+  <div class="tool">
+    <div class="mini">
+      <svg width="110" height="70" viewBox="0 0 110 70">
+        <g fill="none" stroke="#5E6763" stroke-width="1">
+          <rect x="6" y="6" width="28" height="16"/><rect x="41" y="6" width="28" height="16"/><rect x="76" y="6" width="28" height="16"/>
+          <rect x="6" y="27" width="28" height="16"/><rect x="41" y="27" width="28" height="16"/><rect x="76" y="27" width="28" height="16"/>
+          <rect x="6" y="48" width="28" height="16"/><rect x="41" y="48" width="28" height="16"/><rect x="76" y="48" width="28" height="16"/>
+        </g>
+        <ellipse cx="20" cy="14" rx="9" ry="5.5" fill="none" stroke="#9A2827" stroke-width="1.6" transform="rotate(-4 20 14)"/>
+        <ellipse cx="90" cy="35" rx="9" ry="5.5" fill="none" stroke="#9A2827" stroke-width="1.6" transform="rotate(3 90 35)"/>
+      </svg>
+    </div>
+    <div>
+      <h3>事業分析<span class="tag">コア</span></h3>
+      <p>市場のマッチ、資本、経営力など9つの分野を「＋か−か」「良くなっているか、悪化しているか」で評価する。赤い丸で現実に印をつけ、構造的に取り組むべき領域を見えるようにする。</p>
+    </div>
+  </div>
+
+  <div class="tool">
+    <div class="mini">
+      <svg width="110" height="70" viewBox="0 0 110 70">
+        <line x1="55" y1="64" x2="55" y2="14" stroke="#CFD7D5" stroke-width="7"/>
+        <path d="M55 4 L48 16 L62 16 Z" fill="#CFD7D5"/>
+        <rect x="14" y="4" width="82" height="14" fill="none" stroke="#000" stroke-width="1.4"/>
+        <rect x="14" y="52" width="82" height="14" fill="#DCE1E1"/>
+        <rect x="30" y="26" width="50" height="9" fill="#fff" stroke="#E4E4E1"/>
+        <rect x="30" y="38" width="50" height="9" fill="#fff" stroke="#E4E4E1"/>
+      </svg>
+    </div>
+    <div>
+      <h3>緊張構造チャート<span class="tag">コア</span></h3>
+      <p>創り出したいものを上に、そこから見た今の現実を下に。ふたつのあいだに生まれる緊張構造が、行動ステップを生む。構造アプローチの中心にあるチャート。</p>
+    </div>
+  </div>
+
+  <div class="tool">
+    <div class="mini">
+      <svg width="110" height="70" viewBox="0 0 110 70">
+        <g fill="none" stroke="#5E6763" stroke-width="1">
+          <rect x="6" y="6" width="30" height="18" fill="#EFF2F1"/>
+          <rect x="20" y="16" width="30" height="18" fill="#fff"/>
+          <rect x="62" y="8" width="42" height="52"/>
+          <line x1="62" y1="21" x2="104" y2="21"/><line x1="62" y1="34" x2="104" y2="34"/><line x1="62" y1="47" x2="104" y2="47"/>
+          <line x1="76" y1="8" x2="76" y2="60"/><line x1="90" y1="8" x2="90" y2="60"/>
+        </g>
+        <text x="68" y="57" font-size="9" fill="#9A2827" font-family="Montserrat">D</text>
+      </svg>
+    </div>
+    <div>
+      <h3>意思決定<span class="tag opt">必要なとき</span></h3>
+      <p>やるか、やらないか。決定に関わる要素をカードに書き、価値の階層で並べ、評価の組み合わせごとに判定を検討し、最後に「現実はどうなっているか」と突き合わせる。</p>
+    </div>
+  </div>
+
+  <div class="tool">
+    <div class="mini">
+      <svg width="110" height="70" viewBox="0 0 110 70">
+        <g fill="none" stroke="#5E6763" stroke-width="1">
+          <rect x="8" y="8" width="26" height="14" fill="#DCE1E1" stroke="none"/>
+          <rect x="42" y="8" width="26" height="14"/><rect x="76" y="8" width="26" height="14"/>
+          <rect x="8" y="30" width="26" height="14"/><rect x="42" y="30" width="26" height="14"/><rect x="76" y="30" width="26" height="14"/>
+          <rect x="8" y="52" width="26" height="14"/><rect x="42" y="52" width="26" height="14"/><rect x="76" y="52" width="26" height="14"/>
+        </g>
+        <ellipse cx="55" cy="37" rx="8" ry="5" fill="none" stroke="#9A2827" stroke-width="1.6" transform="rotate(-3 55 37)"/>
+      </svg>
+    </div>
+    <div>
+      <h3>パフォーマンス評価<span class="tag opt">必要なとき</span></h3>
+      <p>個人の業務について、評価項目を自分たちで立て、現状と傾向を評価する。項目は必要な数だけ増やせる。人数分のシートを作って切り替えられる。</p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2>正直にお伝えします</h2>
+  <div class="honest">
+    <p class="lead">このツールを使っても、構造アプローチができるようにはなりません。</p>
+    <p>質問のリストは、誰でも読めます。9つの評価分野も、チャートの描き方も、隠すようなものではありません。ロバート・フリッツ自身が著書の中で公開しているものです。</p>
+    <p>けれど、答えを聞いて次の質問を選ぶ力。願望や恐れを混ぜずに、現実をあるがままに見る訓練。葛藤の構造を見抜き、緊張構造へと組み替える技術。ツールの価値はすべて、それを使う人の中にあります。楽器と同じです。楽譜も楽器も、差し上げます。演奏は、練習からしか生まれません。</p>
+  </div>
+</section>
+
+<section>
+  <h2>まず、読む</h2>
+  <div class="book">
+    <div>
+      <div class="bt">『偉大な組織の最小抵抗経路<br>― リーダーのための組織デザイン法則』</div>
+      <div class="ba">ロバート・フリッツ 著　／　田村洋一 訳</div>
+      <p>構造アプローチをビジネスに応用する方法は、この本に一通り書かれています。読んだからといって、使えるようにはなりません。ただ、読まないよりは、読んだほうがいい。そういう本です。</p>
+      <a class="btn" href="https://www.amazon.co.jp/dp/B0BBG8HWHF" target="_blank" rel="noopener">本を見る</a>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2>ふたつの入口</h2>
+  <div class="paths">
+    <div class="path">
+      <h3>ツールに触れてみる</h3>
+      <p>どなたでも自由に使えます。入力はあなたの端末内にだけ保存され、サーバーには何も送信されません。</p>
+      <a class="btn" href="./digital-thinking-tools.html">ツールを開く</a>
+      <p class="note">使いこなせなくても、ご安心ください。それが普通です。</p>
+    </div>
+    <div class="path">
+      <h3>使いこなす技術を学ぶ</h3>
+      <p>これらのツールは、FST・SCCP・FBSの実践の場で、訓練とともに使われています。参加者は各ルームのリソースからご利用ください。</p>
+      <a class="btn primary" href="#programs">プログラムを見る</a>
+      <p class="note">Creating Room にログインできる方は、所属ルームのリソースへ。</p>
+    </div>
+  </div>
+</section>
+
+<section id="programs">
+  <h2>プログラム</h2>
+  <div class="progs">
+    <div class="prog">
+      <div class="pn">FST</div>
+      <p>Fundamentals of Structural Thinking。構造思考の基礎。構造アプローチの土台となる考え方と技術を学ぶ。</p>
+    </div>
+    <div class="prog">
+      <div class="pn">SCCP</div>
+      <p>Structural Consulting Certification Program。構造コンサルティングの技術を実践を通して身につける認定プログラム。</p>
+    </div>
+    <div class="prog">
+      <div class="pn">FBS</div>
+      <p>Fritz Business System。構造アプローチを事業と組織の経営に適用する。</p>
+    </div>
+  </div>
+</section>
+
+<footer>ROBERT FRITZ CONSULTING</footer>
+</div>
+</body>
+</html>
