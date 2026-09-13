@@ -183,6 +183,7 @@ button.cell{
 button.cell:hover{background:var(--panel-soft)}
 button.cell.v1{color:var(--muted);font-weight:500}
 button.cell.v2{color:var(--red)}
+button.cell.v3,button.cell.v4{color:var(--sage);font-weight:700}
 .add-opt{
   align-self:flex-start;border:none;background:none;cursor:pointer;
   font-family:inherit;font-size:.8rem;color:var(--muted);padding:2px 0;
@@ -190,7 +191,8 @@ button.cell.v2{color:var(--red)}
 .add-opt:hover{color:var(--ink)}
 
 /* DDM カードボード（自由配置） */
-.cardboard-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px}
+.cardboard-head{display:flex;justify-content:space-between;align-items:baseline;gap:14px;margin-bottom:6px}
+.cardboard-head .cb-btns{display:flex;gap:14px;flex:none}
 .cardboard-title{font-size:.7rem;letter-spacing:.16em;color:var(--muted)}
 .cardboard{position:relative;border:1px dashed var(--line);background:#FBFBFA;height:420px;overflow:hidden;touch-action:none}
 .ecard{
@@ -204,6 +206,9 @@ button.cell.v2{color:var(--red)}
 .ecard .rmark.v0{color:var(--ink)}
 .ecard .rmark.v2{color:var(--red)}
 .ecard .rmark.v1{color:var(--muted)}
+.ecard .rmark.v3,.ecard .rmark.v4{color:var(--sage)}
+.ecard .cx{border:none;background:none;color:#C8C6C2;cursor:pointer;font-size:.8rem;line-height:1;padding:0 0 0 6px;flex:none}
+.ecard .cx:hover{color:var(--red)}
 .ecard input{
   width:100%;margin-top:4px;font-family:inherit;font-size:.85rem;line-height:1.5;color:var(--ink);
   border:none;border-bottom:1px dashed var(--line);background:none;user-select:text;
@@ -219,6 +224,10 @@ table.ddm th.pcol{position:relative;min-width:56px}
 table.ddm th.pcol .px{position:absolute;top:1px;right:2px;border:none;background:none;color:var(--muted);cursor:pointer;visibility:hidden;font-size:.7rem;padding:0 2px}
 table.ddm th.pcol:hover .px{visibility:visible}
 table.ddm th.pcol .px:hover{color:var(--red)}
+table.ddm th.paddcol{min-width:40px;padding:0}
+table.ddm th.paddcol button{border:none;background:none;cursor:pointer;font-family:inherit;font-size:.9rem;color:var(--muted);padding:4px 6px;line-height:1}
+table.ddm th.paddcol button:hover{color:var(--ink)}
+table.ddm td.pemptycol{border:none;background:none}
 table.ddm th.rcolh{background:var(--sage);color:#fff;min-width:64px}
 td.ehead{padding:4px 8px;text-align:left;cursor:grab}
 td.ehead.dragging{opacity:.4}
@@ -251,10 +260,6 @@ td.rfinal button.cell{color:#fff;font-weight:700}
 .memo textarea::placeholder{color:#C8C6C2}
 .memo textarea:focus{outline:none;border-top-color:var(--muted)}
 
-/* ---------- summary ---------- */
-.summary{margin-top:44px;border-top:1px solid var(--ink);padding-top:18px}
-.summary h2{font-size:.9rem;font-weight:700;letter-spacing:.14em;margin-bottom:4px}
-.summary .hint{font-size:.75rem;color:var(--muted);margin-bottom:14px}
 .tally{display:flex;gap:26px;flex-wrap:wrap;margin-bottom:16px;font-size:.9rem}
 .tally b{font-family:'Montserrat',sans-serif;font-weight:700;font-size:1.25rem;margin-left:8px}
 .tally .neg b{color:var(--red)}
@@ -420,12 +425,11 @@ footer{margin-top:60px;text-align:center;color:var(--muted);font-size:.7rem;lett
   .dchk{border-color:var(--ink) !important}
   .ov-sec{break-before:page}
   .ov-sec:first-of-type{break-before:auto}
-  .add-opt,.add-item,.add-step,.x,.px,.sctl,.mvs,.grip,.cardboard-head .add-opt{display:none!important}
+  .add-opt,.add-item,.add-step,.x,.px,.cx,.sctl,.mvs,.grip,.cardboard-head .add-opt,.cardboard-head .cb-btns,th.paddcol,td.pemptycol{display:none!important}
   .cardboard{border-style:solid}
   .file-actions,.modes,footer .noprint{display:none!important}
   .grid{grid-template-columns:repeat(3,1fr)!important;gap:8px}
   .cat{break-inside:avoid}
-  .summary{break-before:page;border-top:none;padding-top:0}
 }
 </style>
 </head>
@@ -462,15 +466,6 @@ footer{margin-top:60px;text-align:center;color:var(--muted);font-size:.7rem;lett
 
 <div class="grid" id="grid"></div>
 
-<section class="summary">
-  <h2>サマリー</h2>
-  <div class="hint" id="sumhint">各項目の選択が自動で集計されます。マイナスが多い領域が、構造的に取り組むべき現実です。</div>
-  <div class="tally" id="tally"></div>
-  <table class="sum">
-    <thead id="sumhead"><tr><th style="width:30%">項目</th><th style="width:18%">現状</th><th style="width:18%">傾向</th><th>メモ</th></tr></thead>
-    <tbody id="sumbody"></tbody>
-  </table>
-</section>
 
 <footer>ROBERT FRITZ CONSULTING<span id="ver-footer"></span></footer>
 </div>
@@ -513,7 +508,7 @@ footer{margin-top:60px;text-align:center;color:var(--muted);font-size:.7rem;lett
     ・プライベートブラウズ（シークレットモード）では自動保存が効かないことがあります。<br>
     ・各タブの「シート」バーの「＋」で、どのツールもシートを複数枚作れます（複数事業・複数人数分など）。シートが2枚以上あるときは「比較」で全シートの概要を並べて見られます。<br>
     ・緊張構造チャートでは、各行動ステップの「チャートに展開」で、そのステップを「創り出したいもの」にしたサブチャートを無限に掘り下げられます（テレスコーピング）。上部のパンくずで親チャートに戻れます。<br>
-    ・行動ステップには<b>完了チェック</b>と<b>担当</b>を入れられます。完了にすると取り消し線が付き、サマリーに完了件数が出ます。<br>
+    ・行動ステップには<b>完了チェック</b>と<b>担当</b>を入れられます。完了にすると取り消し線が付きます。<br>
     ・「全体を見渡す」の緊張構造チャートは、掘り下げたサブチャートも <b>1 / 1-1 / 1-1-1</b> の階層アウトラインで全部展開されます（各階層の「今のリアリティ」も一緒に出ます）。ここでもそのまま編集でき、印刷では空の行動ステップは出力されません。<br>
     ・次のクライアントに移るときは「新規セッション」ボタンで、保存してから全体をまっさらにできます。</p>
   </div>
@@ -568,6 +563,25 @@ const blankDdm = () => ({
   realityD:null,
   reality:''
 });
+/* カード（要素）の追加・削除。表の行・全パターンの評価・現実の評価も一緒に増減する */
+function addElem(s){
+  s.elements.push({id:Math.max(0,...s.elements.map(e=>e.id||0))+1,label:'',type:2});
+  s.patterns.forEach(pt=>pt.cells.push(null));
+  s.realityCells.push(null);
+  render();
+}
+function removeElem(s,ei){
+  if(s.elements.length<=1){alert('最後の1枚は削除できません。');return;}
+  const el=s.elements[ei];
+  const hasVal=s.patterns.some(pt=>pt.cells[ei]!==null)||s.realityCells[ei]!==null;
+  if((el.label||'').trim()||hasVal){
+    if(!confirm('このカード（'+((el.label||'').trim()||('要素 '+(ei+1)))+'）を削除します。表の行と評価も一緒に消えます。よろしいですか？'))return;
+  }
+  s.elements.splice(ei,1);
+  s.patterns.forEach(pt=>pt.cells.splice(ei,1));
+  s.realityCells.splice(ei,1);
+  render();
+}
 /* 要素（行）の並べ替え：全パターンのセルと現実セルも一緒に動かす */
 function moveElem(s,from,to){
   if(to<0||to>=s.elements.length||from===to)return;
@@ -633,11 +647,9 @@ function today(){const d=new Date();return d.getFullYear()+'-'+String(d.getMonth
 /* ---------- els ---------- */
 const $grid=document.getElementById('grid');
 const $meta=document.getElementById('meta');
-const $tally=document.getElementById('tally');
-const $sumbody=document.getElementById('sumbody');
 
 /* ---------- render ---------- */
-function syncSummary(){if(view==='tabs'){renderSummary();renderInstBar();}}
+function syncSummary(){if(view==='tabs'){renderInstBar();}}
 /* 再描画は $grid を作り直すため、そのままだとスクロール位置が先頭に戻ってしまう。
    表示中の文脈（ビュー/タブ/シート/階層）が変わっていなければ位置を復元し、
    別の内容に切り替わったときだけ先頭に戻す。 */
@@ -656,11 +668,10 @@ function render(){
 
 function renderCore(){
   const tabs=document.querySelector('.modes');
-  const sumSec=document.querySelector('.summary');
   const bv=document.getElementById('btn-view');
   const br=document.getElementById('btn-reset');
   if(view==='all'){
-    tabs.style.display='none';sumSec.style.display='none';br.style.display='none';
+    tabs.style.display='none';br.style.display='none';
     $meta.style.display='none';
     bv.textContent='タブ表示に戻る';bv.classList.add('active');
     renderAll();
@@ -670,17 +681,16 @@ function renderCore(){
     if(mode!==lastMode){compareOn=false;ui.tpath=[];}
     lastMode=mode;
     if(compareOn&&listOf(mode).length>1){
-      $meta.style.display='none';sumSec.style.display='none';
+      $meta.style.display='none';
       renderCompare($grid);
     }else{
       compareOn=false;
-      $meta.style.display='';sumSec.style.display='';
+      $meta.style.display='';
       renderMeta($meta,mode);
       if(mode==='ddm'){renderDdm($grid);}
       else if(mode==='q13'){renderQ13($grid);}
       else if(mode==='tension'){renderTension($grid);}
       else{renderGrid($grid,mode);}
-      renderSummary();
     }
   }
   renderInstBar();
@@ -975,10 +985,20 @@ function renderQ13(container,s){
 }
 
 /* ---------- DDM render ---------- */
-const SYMS=['◯','0','−'];
+const SYMS=['◯','0','−','△','?'];
 function cyc(v,t){ /* クリック時の値の循環。t=2:◯→−、t=3:◯→0→− */
   if(t===3)return v===null?0:(v===2?null:v+1);
   return v===null?0:(v===0?2:null);
+}
+/* 現実の列だけは「わからない」を置ける。3=△（どちらとも言えない）／4=?（わからない）
+   t=2: ◯→−→△→?→空　　t=3: ◯→0→−→△→?→空 */
+function cycReality(v,t){
+  if(v===null)return 0;
+  if(v===0)return t===3?1:2;
+  if(v===1)return 2;
+  if(v===2)return 3;
+  if(v===3)return 4;
+  return null;
 }
 function cellBtn(v,title,onclick){
   const b=document.createElement('button');
@@ -994,7 +1014,7 @@ function renderDdm(container,s){
   container.innerHTML='';
 
   const lg=document.createElement('div');lg.className='ddm-legend';
-  lg.innerHTML='セルをクリックで切替 ─ <b>◯</b> 十分・良くなる ／ <b>0</b> 変わらない ／ <b>−</b> 不十分・悪化する。要素名の横の <b>2択/3択</b> で切り替えられます。要素は上ほど価値の階層が上位。';
+  lg.innerHTML='セルをクリックで切替 ─ <b>◯</b> 十分・良くなる ／ <b>0</b> 変わらない ／ <b>−</b> 不十分・悪化する。要素名の横の <b>2択/3択</b> で切り替えられます。要素は上ほど価値の階層が上位。<br>「現実」の列とRだけは <b>△</b>（どちらとも言えない）と <b>?</b>（まだわからない）も置けます。';
   container.append(lg);
 
   /* ---- カードボード：自由に動かして比較する ---- */
@@ -1002,9 +1022,14 @@ function renderDdm(container,s){
   const cbHead=document.createElement('div');cbHead.className='cardboard-head';
   const cbTitle=document.createElement('div');cbTitle.className='cardboard-title';
   cbTitle.textContent='カード ─ 自由に動かして比較する（右上は「現実」の評価）';
+  const cbBtns=document.createElement('div');cbBtns.className='cb-btns';
+  const cbAdd=document.createElement('button');cbAdd.className='add-opt';cbAdd.textContent='＋ カードを追加';
+  cbAdd.title='空のカードを1枚増やす（表の行も増えます）';
+  cbAdd.addEventListener('click',()=>addElem(s));
   const cbAlign=document.createElement('button');cbAlign.className='add-opt';cbAlign.textContent='整列';
   cbAlign.title='カードを元の並びに整列';
-  cbHead.append(cbTitle,cbAlign);
+  cbBtns.append(cbAdd,cbAlign);
+  cbHead.append(cbTitle,cbBtns);
   const board=document.createElement('div');board.className='cardboard';
   cbWrap.append(cbHead,board);
   container.append(cbWrap);
@@ -1029,6 +1054,11 @@ function renderDdm(container,s){
     });
     th.append(x);hr.append(th);
   });
+  const hAdd=document.createElement('th');hAdd.className='paddcol';
+  const hAddBtn=document.createElement('button');hAddBtn.textContent='＋';
+  hAddBtn.title='パターンを追加（評価の組み合わせを増やす）';
+  hAddBtn.addEventListener('click',()=>{s.patterns.push(blankPattern());render();});
+  hAdd.append(hAddBtn);hr.append(hAdd);
   const hReal=document.createElement('th');hReal.className='rcolh';hReal.textContent='現実';hr.append(hReal);
   thead.append(hr);tbl.append(thead);
 
@@ -1086,10 +1116,11 @@ function renderDdm(container,s){
         ()=>{pt.cells[ei]=cyc(pt.cells[ei],el.type);render();}));
       tr.append(td);
     });
+    const spacer=document.createElement('td');spacer.className='pemptycol';tr.append(spacer);
     const rtd=document.createElement('td');rtd.className='rcell';
     rtd.append(cellBtn(s.realityCells[ei],
-      elName()+'：現実はどうなっているか（'+(el.type===3?'◯→0→−':'◯→−')+'）',
-      ()=>{s.realityCells[ei]=cyc(s.realityCells[ei],el.type);render();}));
+      elName()+'：現実はどうなっているか（'+(el.type===3?'◯→0→−':'◯→−')+'→△→?）',
+      ()=>{s.realityCells[ei]=cycReality(s.realityCells[ei],el.type);render();}));
     tr.append(rtd);
     tbody.append(tr);
   });
@@ -1103,11 +1134,12 @@ function renderDdm(container,s){
       ()=>{pt.d=cyc(pt.d,2);render();}));
     dr.append(td);
   });
+  const dspacer=document.createElement('td');dspacer.className='pemptycol';dr.append(dspacer);
   const rf=document.createElement('td');rf.className='rfinal';
   const rb=document.createElement('button');rb.className='cell';
   rb.textContent=(s.realityD===null?'R':SYMS[s.realityD]);
-  rb.title='現実が示す判定：やる(◯) ／ やらない(−)';
-  rb.addEventListener('click',()=>{s.realityD=cyc(s.realityD,2);render();});
+  rb.title='現実が示す判定：やる(◯) ／ やらない(−) ／ △ どちらとも言えない ／ ? わからない';
+  rb.addEventListener('click',()=>{s.realityD=cycReality(s.realityD,2);render();});
   rf.append(rb);dr.append(rf);
   tbody.append(dr);
 
@@ -1137,7 +1169,10 @@ function renderDdm(container,s){
     rm.className='rmark'+(rv===null?'':' v'+rv);
     rm.textContent=rv===null?'':SYMS[rv];
     rm.title='現実の評価（表の「現実」列と連動）';
-    ch.append(rm);
+    const cx=document.createElement('button');cx.className='cx';cx.textContent='×';
+    cx.title='このカードを削除（表の行も消えます）';
+    cx.addEventListener('click',e=>{e.stopPropagation();removeElem(s,ei);});
+    ch.append(rm,cx);
     card.append(ch);
     const ci=document.createElement('input');
     ci.placeholder='要素 '+(ei+1);ci.value=el.label;
@@ -1150,7 +1185,7 @@ function renderDdm(container,s){
     card.append(ci);
     /* 自由ドラッグ */
     card.addEventListener('pointerdown',e=>{
-      if(e.target.tagName==='INPUT')return;
+      if(e.target.tagName==='INPUT'||e.target.tagName==='BUTTON')return;
       e.preventDefault();
       const crect=card.getBoundingClientRect(), brect=board.getBoundingClientRect();
       const ox=e.clientX-crect.left, oy=e.clientY-crect.top;
@@ -1179,11 +1214,6 @@ function renderDdm(container,s){
     s.elements.forEach((el,i)=>{const p=defPos(i);el.x=p.x;el.y=p.y;});
     render();
   });
-
-  const add=document.createElement('button');add.className='add-opt';
-  add.textContent='＋ パターンを追加（評価の組み合わせを増やす）';
-  add.addEventListener('click',()=>{s.patterns.push(blankPattern());render();});
-  container.append(add);
 
   /* 現実メモ */
   const rm=document.createElement('div');rm.className='memo';rm.style.marginTop='14px';
@@ -1566,109 +1596,6 @@ function ring(){
   return svg;
 }
 
-/* ---------- summary ---------- */
-function renderSummary(){
-  if(mode==='ddm'){renderDdmSummary();return;}
-  if(mode==='q13'){renderQ13Summary();return;}
-  if(mode==='tension'){renderTensionSummary();return;}
-  document.getElementById('sumhint').textContent='各項目の選択が自動で集計されます。マイナスが多い領域が、構造的に取り組むべき現実です。';
-  document.getElementById('sumhead').innerHTML='<tr><th style="width:30%">項目</th><th style="width:18%">現状</th><th style="width:18%">傾向</th><th>メモ</th></tr>';
-  const s=resolve(mode);
-  const defs=catDefs(mode,s);
-  const cells=s.cells;
-  let plus=0,minus=0,none=0;
-  cells.forEach(c=>{
-    if(c.bin===null){none++;}
-    else if(c.bin===0){plus++;}
-    else{minus++;}
-  });
-  $tally.innerHTML=
-    '<span>＋ の項目<b>'+plus+'</b></span>'+
-    '<span class="neg">－ の項目<b>'+minus+'</b></span>'+
-    '<span>未評価<b style="color:var(--muted)">'+none+'</b></span>';
-  $sumbody.innerHTML='';
-  defs.forEach((def,i)=>{
-    const c=cells[i];
-    const tr=document.createElement('tr');
-    const name=def.editable ? (def.t||'評価項目 '+(i+1)) : def.t;
-    const binTxt = c.bin===null ? '<span class="none">—</span>'
-      : c.bin===0 ? '<span class="plus">＋ '+(def.bin[0]||'')+'</span>'
-      : '<span class="minus">－ '+(def.bin[1]||'')+'</span>';
-    const trTxt = c.tr===null ? '<span class="none">—</span>'
-      : c.tr===0 ? '<span class="plus">＋ '+(def.tr[0]||'')+'</span>'
-      : c.tr===1 ? '<span class="zero">0 '+(def.tr[1]||'')+'</span>'
-      : '<span class="minus">－ '+(def.tr[2]||'')+'</span>';
-    tr.innerHTML='<td>'+esc(name)+'</td><td class="c">'+binTxt+'</td><td class="c">'+trTxt+'</td><td class="memo-cell">'+esc(c.memo)+'</td>';
-    $sumbody.append(tr);
-  });
-}
-function renderQ13Summary(){
-  const s=resolve('q13');
-  document.getElementById('sumhint').textContent='事業ごとの記入状況です。答えられない質問こそが、次に取り組むテーマになります。';
-  document.getElementById('sumhead').innerHTML='<tr><th style="width:34%">事業</th><th style="width:18%">記入済み</th><th>未記入の質問</th></tr>';
-  $tally.innerHTML='<span>事業<b>'+s.businesses.length+'</b></span>';
-  $sumbody.innerHTML='';
-  s.businesses.forEach((b,bi)=>{
-    const unanswered=[];
-    b.answers.forEach((a,qi)=>{if(!a.trim())unanswered.push('Q'+(qi+1));});
-    const total=Q13.length;                   /* 11の質問（事業名は除く） */
-    const done=total-unanswered.length;
-    const tr=document.createElement('tr');
-    tr.innerHTML='<td>'+esc(b.name||('事業 '+(bi+1)))+'</td>'+
-      '<td class="c '+(done===total?'plus':'zero')+'">'+done+' / '+total+'</td>'+
-      '<td class="memo-cell">'+(unanswered.length?unanswered.join('、'):'<span class="plus">すべて記入済み</span>')+'</td>';
-    $sumbody.append(tr);
-  });
-}
-function renderTensionSummary(){
-  const s=tensionCur();
-  document.getElementById('sumhint').textContent='創り出したいものと今の現実の間の緊張構造が、行動ステップを生みます。ステップと期日の一覧です。';
-  document.getElementById('sumhead').innerHTML='<tr><th style="width:6%">#</th><th>行動ステップ</th><th style="width:14%">担当</th><th style="width:16%">期日</th></tr>';
-  const v=s.vision.items.filter(t=>t.trim()).length;
-  const r=s.reality.items.filter(t=>t.trim()).length;
-  const acts=s.actions.filter(a=>a.text.trim());
-  $tally.innerHTML=
-    '<span>創り出したいもの<b>'+(v||'—')+'</b></span>'+
-    '<span>今の現実<b>'+(r||'—')+'</b></span>'+
-    '<span>行動ステップ<b>'+acts.length+'</b></span>'+
-    '<span>完了<b>'+acts.filter(a=>a.done).length+' / '+acts.length+'</b></span>'+
-    '<span class="neg">期日未設定<b>'+acts.filter(a=>!a.due).length+'</b></span>';
-  $sumbody.innerHTML='';
-  s.actions.forEach((a,i)=>{
-    if(!a.text.trim())return;
-    const tr=document.createElement('tr');
-    const txt=a.done
-      ? '<span style="text-decoration:line-through;color:var(--muted)">'+esc(a.text)+'</span> <span class="plus">完了</span>'
-      : esc(a.text);
-    tr.innerHTML='<td class="c zero">'+(i+1)+'</td><td>'+txt+'</td>'+
-      '<td class="c">'+(a.owner?esc(a.owner):'<span class="none">—</span>')+'</td>'+
-      '<td class="c">'+(a.due?esc(a.due):'<span class="none">—</span>')+'</td>';
-    $sumbody.append(tr);
-  });
-}
-function renderDdmSummary(){
-  const s=resolve('ddm');
-  document.getElementById('sumhint').textContent='パターンごとの評価とDの判定の一覧です。「現実」の行と見比べて、どのパターンに現実が一致しているかを確かめます。';
-  document.getElementById('sumhead').innerHTML='<tr><th style="width:26%">列</th><th style="width:13%">◯</th><th style="width:13%">0</th><th style="width:13%">−</th><th style="width:15%">未評価</th><th>判定</th></tr>';
-  const used=s.elements.filter(e=>e.label.trim()).length;
-  $tally.innerHTML=
-    '<span>要素<b>'+(used||'—')+'</b></span>'+
-    '<span>パターン<b>'+s.patterns.length+'</b></span>'+
-    '<span class="neg">判定<b>'+(s.meta.yn===null?'—':(s.meta.yn===0?'Y やる':'N やらない'))+'</b></span>';
-  $sumbody.innerHTML='';
-  const row=(label,cells,d,isReal)=>{
-    let p=0,z=0,m=0,n=0;
-    cells.forEach(c=>{c===0?p++:c===1?z++:c===2?m++:n++;});
-    const tr=document.createElement('tr');
-    const dTxt=d===null?'<span class="none">—</span>':(d===0?'<span class="plus">◯ やる</span>':'<span class="minus">− やらない</span>');
-    tr.innerHTML='<td>'+(isReal?'<b>':'')+esc(label)+(isReal?'</b>':'')+'</td>'+
-      '<td class="c plus">'+p+'</td><td class="c zero">'+z+'</td><td class="c minus">'+m+'</td>'+
-      '<td class="c none">'+n+'</td><td class="c">'+dTxt+'</td>';
-    $sumbody.append(tr);
-  };
-  s.patterns.forEach((pt,pi)=>row('パターン '+(pi+1),pt.cells,pt.d,false));
-  row('現実',s.realityCells,s.realityD,true);
-}
 function esc(s){return (s||'').replace(/[&<>"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]));}
 
 function autoGrow(ta){ta.style.height='auto';ta.style.height=ta.scrollHeight+'px';}
@@ -1837,7 +1764,7 @@ function applyCompat(){  /* 旧バージョンのデータとの互換 */
 /* ---------- 端末内自動保存（localStorage） ----------
    データはこの端末のブラウザ内にだけ保存され、外部には送信されません。 */
 /* ==== バージョン（更新時はここを書き換える） ==== */
-const APP_VERSION='1.4.1（2026年8月）';
+const APP_VERSION='1.5.0（2026年9月）';
 document.getElementById('ver-footer').textContent=' ・ v'+APP_VERSION.split('（')[0];
 document.getElementById('ver-help').textContent=APP_VERSION;
 
